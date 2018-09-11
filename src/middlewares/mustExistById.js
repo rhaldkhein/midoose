@@ -2,22 +2,32 @@
 
 const _get = require('lodash/get')
 const _defaults = require('lodash/defaults')
+const { error } = require('..')
 
 module.exports = (model, id = 'body.id', opt = {}) => {
+
   _defaults(opt, {
-    key: 'result'
+    end: true,
+    key: 'result',
+    document: false
   })
-  let _isFunc = typeof id === 'function'
+
+  let isFunc = typeof id === 'function'
+
   return (req, res, next) => {
-    let _id = _isFunc ? id(req, res) :
-      req.params.id || req.body.id || _get(req, id)
-    model.findById(_id, '+_id', opt.options)
+    model.findById(
+      (isFunc && id(req, res)) ||
+      _get(req, id) ||
+      _get(res, id),
+      '+_id',
+      opt.options)
       .then(doc => {
-        if (!doc) throw Code.error('EANF')
-        res.locals[opt.key] = _id
+        if (!doc && opt.end) throw new Error('Document must exist')
+        res.locals[opt.key] = opt.document ? doc : !!doc
         next()
         return null
       })
-      .catch(err => res.jsonError(err))
+      .catch(err => error(res, err))
   }
+
 }

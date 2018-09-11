@@ -1,22 +1,30 @@
 'use strict'
 
-const { hydrateObject } = require('../../utils/helpers')
 const _defaults = require('lodash/defaults')
+const { error, evalProps } = require('..')
 
 module.exports = (model, cond, opt = {}) => {
+
   _defaults(opt, {
-    key: 'result'
+    end: true,
+    key: 'result',
+    document: false
   })
-  let _isFunc = typeof cond === 'function'
+
+  let isFunc = typeof cond === 'function'
+
   return (req, res, next) => {
-    let _cond = _isFunc ? cond(req, res) : hydrateObject(cond, req, res)
-    model.findOne(_cond, '+_id', opt.options)
+    let evalCond = isFunc ? cond(req, res) : evalProps(cond, req, res)
+    model.findOne(
+      evalCond,
+      '+_id',
+      opt.options)
       .then(doc => {
-        if (doc) throw Code.error('EAAX')
-        res.locals[opt.key] = _cond
+        if (doc && opt.end) throw new Error('Document must not exist')
+        res.locals[opt.key] = opt.document ? doc : !doc
         next()
         return null
       })
-      .catch(err => res.jsonError(err))
+      .catch(err => error(res, err))
   }
 }

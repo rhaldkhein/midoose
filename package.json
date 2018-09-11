@@ -1,5 +1,5 @@
 {
-  "name": "mongox",
+  "name": "midoose",
   "version": "0.0.0",
   "description": "Collection of high-level Mongoose utility middlewares for Express",
   "main": "index.js",
@@ -8,19 +8,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rhaldkhein/mongox.git"
+    "url": "git+https://github.com/rhaldkhein/midoose.git"
   },
   "author": "RhaldKhein",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rhaldkhein/mongox/issues"
+    "url": "https://github.com/rhaldkhein/midoose/issues"
   },
-  "homepage": "https://github.com/rhaldkhein/mongox#readme",
+  "homepage": "https://github.com/rhaldkhein/midoose#readme",
   "dependencies": {
     "lodash": "^4.17.10"
   },
   "devDependencies": {
     "express": "^4.16.3",
+    "mockgoose": "^7.3.5",
     "mongoose": "^5.2.14"
   }
 }

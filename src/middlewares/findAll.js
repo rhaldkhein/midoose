@@ -1,7 +1,7 @@
 'use strict'
 
 const _defaults = require('lodash/defaults')
-const { end, error, evalProps } = require('..')
+const { done, error, evalProps } = require('..')
 
 /**
  * Creates a findAll middleware. 
@@ -29,7 +29,7 @@ const { end, error, evalProps } = require('..')
  *  - Optional. Options object
  * 
  *  end {Boolean}     - Ends the middleware chain, will NOT trigger next()
- *                      but will trigger global `end` handler
+ *                      but will trigger global `done` handler
  * 
  *  key {String}      - The property name to attach the result to `res.locals`
  *                      for next middleware to access
@@ -51,7 +51,7 @@ module.exports = (model, cond = {}, opt = {}) => {
     key: 'result'
   })
 
-  let _isFunc = typeof cond === 'function'
+  const _isFunc = typeof cond === 'function'
 
   return (req, res, next) => {
     model.find(
@@ -66,7 +66,7 @@ module.exports = (model, cond = {}, opt = {}) => {
       })
       .then(docs => opt.map ? docs.map(opt.map) : docs)
       .then(docs => {
-        if (opt.end) return end(res, doc)
+        if (opt.end) return done(res, doc)
         else res.locals[opt.key] = docs
         next()
         return null

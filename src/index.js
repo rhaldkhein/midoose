@@ -13,6 +13,6 @@ exports.evalProps = (obj, req, res) => {
 }
 
 exports.handlers = {
-  end: (res, payload) => { res.json(payload) },
+  done: (res, payload) => { res.json(payload) },
   error: (res, err) => { res.status(400).json(err) }
 }
