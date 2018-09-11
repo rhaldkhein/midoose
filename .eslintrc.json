@@ -2,7 +2,8 @@
   "env": {
     "commonjs": true,
     "es6": true,
-    "node": true
+    "node": true,
+    "mocha": true
   },
   "extends": "eslint:recommended",
   "rules": {
@@ -10,13 +11,14 @@
       "error",
       2
     ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
     "quotes": [
       "error",
       "single"
     ]
+  },
+  "globals": {
+    "expect": true,
+    "mockReq": true,
+    "mockRes": true
   }
 }
