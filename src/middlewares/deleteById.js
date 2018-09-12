@@ -2,7 +2,7 @@
 
 const _get = require('lodash/get')
 const _defaults = require('lodash/defaults')
-const { done, error } = require('..').handlers
+const { handlers: { done, error } } = require('..')
 
 /**
  * Creates a delete middleware. Gets the ID from `req.params.id` or `req.body.id`

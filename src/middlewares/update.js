@@ -2,7 +2,7 @@
 
 const _pick = require('lodash/pick')
 const _defaults = require('lodash/defaults')
-const { done, error } = require('..')
+const { handlers: { done, error } } = require('..')
 
 module.exports = (model, cond, doc, opt = {}) => {
 

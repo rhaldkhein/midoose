@@ -2,7 +2,7 @@
 
 const _get = require('lodash/get')
 const _defaults = require('lodash/defaults')
-const { error } = require('..')
+const { handlers: { error } } = require('..')
 
 module.exports = (model, id = 'body.id', opt = {}) => {
 

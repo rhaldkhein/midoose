@@ -3,6 +3,8 @@
 
 module.exports = (req, res) => {
 
-  res.json({ foo: req.body.foo + 'x' })
+  setTimeout(() => {
+    res.json({ foo: req.body.foo })
+  }, 1000)
 
 }

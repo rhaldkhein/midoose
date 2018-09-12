@@ -1,26 +1,53 @@
+const mongoose = require('mongoose')
 const chai = require('chai')
 const sinonChai = require('sinon-chai')
-const mongoose = require('mongoose')
-const Mockgoose = require('mockgoose').Mockgoose
+const glob = require('glob')
+const path = require('path')
 
-const mockgoose = new Mockgoose(mongoose)
+// require('./models')
+chai.should()
 chai.use(sinonChai)
 
-const { mockReq, mockRes } = require('sinon-express-mock')
-const { expect } = chai
+// global.expect = chai.expect
 
-global.mockReq = mockReq
-global.mockRes = mockRes
-global.expect = expect
+// Connect to DB
+// before(done => {
+//   mongoose.connect('mongodb://localhost/midoose', { useNewUrlParser: true })
+//     .then(() => {
+//       Model.User.deleteOne({}, () => null)
+//       done()
+//     })
+// })
 
+// Disconnect DB
+// after(done => {
+//   mongoose.connection.close()
+//   done()
+// })
 
-before(function (done) {
-  mockgoose.prepareStorage().then(function () {
-    // mongoose connection		
-    mongoose.connect('mongodb://example.com/TestingDB', function (err) {
-      done(err)
-    })
+// Get all test suites
+// glob.sync('./test/middlewares/**/*.js').forEach(function (file) {
+//   require(path.resolve(file))
+// })
+
+function asyncHello(name, delay, cb) {
+  setTimeout(function () {
+    console.log("running after ", delay)
+    cb("hello " + name)
+  }, delay)
+}
+
+const sinon = require('sinon')
+
+describe('create', () => {
+
+  it('should foo the bar', (done) => {
+
+    var cb = sinon.spy()
+    asyncHello("foo", 500, cb)
+
+    cb.should.have.been.called
+    setTimeout(done, 1000)
   })
-})
 
-require('./express')
+})

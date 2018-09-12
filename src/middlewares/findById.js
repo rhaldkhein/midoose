@@ -2,7 +2,7 @@
 
 const _get = require('lodash/get')
 const _defaults = require('lodash/defaults')
-const { done, error } = require('..')
+const { handlers: { done, error } } = require('..')
 
 /**
  * Creates a findById middleware. 

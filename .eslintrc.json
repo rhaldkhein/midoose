@@ -19,6 +19,7 @@
   "globals": {
     "expect": true,
     "mockReq": true,
-    "mockRes": true
+    "mockRes": true,
+    "Model": true
   }
 }

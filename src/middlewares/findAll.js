@@ -1,7 +1,7 @@
 'use strict'
 
 const _defaults = require('lodash/defaults')
-const { done, error, evalProps } = require('..')
+const { handlers: { done, error }, evalProps } = require('..')
 
 /**
  * Creates a findAll middleware. 

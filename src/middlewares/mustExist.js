@@ -1,7 +1,7 @@
 'use strict'
 
 const _defaults = require('lodash/defaults')
-const { error, evalProps } = require('..')
+const { handlers: { error }, evalProps } = require('..')
 
 module.exports = (model, cond, opt = {}) => {
 
