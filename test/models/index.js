@@ -1,3 +1,4 @@
 global.Model = {
-  User: require('./user')
+  User: require('./user'),
+  Post: require('./post')
 }

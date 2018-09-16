@@ -26,11 +26,7 @@ module.exports = (model, docs, opt = {}) => {
     model.create(docsRaw, opt.options)
       .then(documents => {
         if (opt.populate) {
-          if (Array.isArray(documents)) {
-            return model.populate(documents, opt.populate)
-          } else {
-            return documents.populate(opt.populate).execPopulate()
-          }
+          return model.populate(documents, opt.populate)
         }
         return documents
       })

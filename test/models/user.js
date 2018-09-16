@@ -9,6 +9,6 @@ const schema = new Schema({
   age: Number,
   active: Boolean
 
-});
+})
 
 module.exports = mongoose.model('User', schema)

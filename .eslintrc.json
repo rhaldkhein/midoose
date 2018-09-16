@@ -6,7 +6,16 @@
     "mocha": true
   },
   "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
   "rules": {
+    "semi": [
+      "error",
+      "never"
+    ],
     "indent": [
       "error",
       2

@@ -1,21 +1,50 @@
-const mongoose = require('mongoose')
-const chai = require('chai')
-const sinonChai = require('sinon-chai')
 const glob = require('glob')
 const path = require('path')
+const chai = require('chai')
+const sinonChai = require('sinon-chai')
+const chaiAsPromised = require('chai-as-promised')
 
-// require('./models')
-chai.should()
+require('./models')
+
+// chai.should()
+chai.use(chaiAsPromised)
 chai.use(sinonChai)
 
-// global.expect = chai.expect
+global.expect = chai.expect
+
+global.mockRes = json => {
+  return {
+    json,
+    locals: {},
+    status: function () { return this }
+  }
+}
+
 
 // Connect to DB
+// const mongoose = require('mongoose')
+// global.samples = {}
 // before(done => {
 //   mongoose.connect('mongodb://localhost/midoose', { useNewUrlParser: true })
 //     .then(() => {
 //       Model.User.deleteOne({}, () => null)
-//       done()
+//       Model.Post.deleteOne({}, () => null)
+//       Model.User.create([
+//         { name: 'FooUser', age: 41, active: true },
+//         { name: 'BarUser', age: 43, active: false },
+//         { name: 'BazUser', age: 46, active: true }
+//       ]).then(users => {
+//         global.samples.users = users
+//         return Model.Post.create([
+//           { user: users[0].id, title: 'FooPost' },
+//           { user: users[0].id, title: 'BarPost' },
+//           { user: users[1].id, title: 'BazPost' },
+//           { user: users[2].id, title: 'ZapPost' },
+//           { user: users[2].id, title: 'YooPost' }
+//         ])
+//       }).then(posts => {
+//         global.samples.posts = posts
+//       }).then(done)
 //     })
 // })
 
@@ -26,28 +55,6 @@ chai.use(sinonChai)
 // })
 
 // Get all test suites
-// glob.sync('./test/middlewares/**/*.js').forEach(function (file) {
-//   require(path.resolve(file))
-// })
-
-function asyncHello(name, delay, cb) {
-  setTimeout(function () {
-    console.log("running after ", delay)
-    cb("hello " + name)
-  }, delay)
-}
-
-const sinon = require('sinon')
-
-describe('create', () => {
-
-  it('should foo the bar', (done) => {
-
-    var cb = sinon.spy()
-    asyncHello("foo", 500, cb)
-
-    cb.should.have.been.called
-    setTimeout(done, 1000)
-  })
-
+glob.sync('./test/suites/**/*.js').forEach(function (file) {
+  require(path.resolve(file))
 })
