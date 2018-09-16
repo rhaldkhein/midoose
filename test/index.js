@@ -20,39 +20,23 @@ global.mockRes = json => {
   }
 }
 
-
-// Connect to DB
-// const mongoose = require('mongoose')
-// global.samples = {}
-// before(done => {
-//   mongoose.connect('mongodb://localhost/midoose', { useNewUrlParser: true })
-//     .then(() => {
-//       Model.User.deleteOne({}, () => null)
-//       Model.Post.deleteOne({}, () => null)
-//       Model.User.create([
-//         { name: 'FooUser', age: 41, active: true },
-//         { name: 'BarUser', age: 43, active: false },
-//         { name: 'BazUser', age: 46, active: true }
-//       ]).then(users => {
-//         global.samples.users = users
-//         return Model.Post.create([
-//           { user: users[0].id, title: 'FooPost' },
-//           { user: users[0].id, title: 'BarPost' },
-//           { user: users[1].id, title: 'BazPost' },
-//           { user: users[2].id, title: 'ZapPost' },
-//           { user: users[2].id, title: 'YooPost' }
-//         ])
-//       }).then(posts => {
-//         global.samples.posts = posts
-//       }).then(done)
-//     })
-// })
-
-// Disconnect DB
-// after(done => {
-//   mongoose.connection.close()
-//   done()
-// })
+const users = [
+  { _id: '123', name: 'FooUser', age: 1, active: true },
+  { _id: '124', name: 'BarUser', age: 2, active: false },
+  { _id: '125', name: 'BazUser', age: 3, active: true },
+  { _id: '126', name: 'ZapUser', age: 4, active: false }
+]
+const posts = [
+  { user: users[0]._id, title: 'FooPost' },
+  { user: users[0]._id, title: 'BarPost' },
+  { user: users[1]._id, title: 'BazPost' },
+  { user: users[2]._id, title: 'ZapPost' },
+  { user: users[2]._id, title: 'JazPost' },
+  { user: users[2]._id, title: 'GalPost' },
+  { user: users[3]._id, title: 'FaaPost' },
+  { user: users[3]._id, title: 'YooPost' }
+]
+global.samples = { users, posts }
 
 // Get all test suites
 glob.sync('./test/suites/**/*.js').forEach(function (file) {

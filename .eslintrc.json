@@ -26,6 +26,7 @@
     ]
   },
   "globals": {
+    "samples": true,
     "expect": true,
     "mockReq": true,
     "mockRes": true,
