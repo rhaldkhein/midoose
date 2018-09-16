@@ -5,7 +5,6 @@ const create = require('../../src/middlewares/create')
 
 describe('create', () => {
 
-  // let stubCreate
   const req = {
     body: {
       name: 'Foo',
@@ -19,7 +18,7 @@ describe('create', () => {
     }
   }
 
-  it('should create by array of fields', done => {
+  it('should create by array of fields (default)', done => {
 
     const stubCreate = sinon.stub(Model.User, 'create')
       .returns(Promise.resolve({
@@ -208,7 +207,7 @@ describe('create', () => {
 
   })
 
-  it('should create but NOT end', done => {
+  it('should create but DO NOT end', done => {
 
     const stubCreate = sinon.stub(Model.User, 'create')
       .returns(Promise.resolve({
@@ -241,7 +240,7 @@ describe('create', () => {
 
   })
 
-  it('should create but NOT end with custom key result', done => {
+  it('should create but DO NOT end with custom key result', done => {
 
     const stubCreate = sinon.stub(Model.User, 'create')
       .returns(Promise.resolve({
@@ -272,6 +271,29 @@ describe('create', () => {
         key: 'customResult'
       }
     )(req, res, next)
+
+  })
+
+  it('should catch', done => {
+
+    const stubCreate = sinon.stub(Model.User, 'create')
+      .returns(Promise.reject(new Error('sample error')))
+
+    const res = mockRes(payload => {
+      try {
+        expect(payload).to.be.instanceOf(Error)
+          .with.property('message', 'sample error')
+        done()
+      } catch (error) {
+        done(error)
+      }
+      stubCreate.restore()
+    })
+
+    create(
+      Model.User,
+      ['name', 'age']
+    )(req, res)
 
   })
 
