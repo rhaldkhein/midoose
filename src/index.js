@@ -25,3 +25,7 @@ exports.handlers = {
   done: (res, payload) => { res.json(payload) },
   error: (res, err) => { res.status(400).json(err) }
 }
+
+exports.classes = {
+  Error
+}

@@ -235,7 +235,7 @@ describe('findById', () => {
     )(req, res, next)
   })
 
-  it('should catch', done => {
+  it('should catch on error', done => {
     const req = {}
     const res = mockRes(payload => {
       try {
@@ -249,6 +249,26 @@ describe('findById', () => {
     findById(
       Model.User,
       () => 'error'
+    )(req, res)
+  })
+
+  it('should catch for no document and `end` is true', done => {
+    const req = { body: { id: 'no_id' } }
+    const res = mockRes(payload => {
+      try {
+        expect(payload).to.be.instanceOf(Error)
+          .with.property('message', 'document not found')
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+    findById(
+      Model.User,
+      'body.id',
+      {
+        end: true
+      }
     )(req, res)
   })
 

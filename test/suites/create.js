@@ -274,7 +274,7 @@ describe('create', () => {
 
   })
 
-  it('should catch', done => {
+  it('should catch on error', done => {
 
     const stubCreate = sinon.stub(Model.User, 'create')
       .rejects(new Error('sample error'))

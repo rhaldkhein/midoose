@@ -2,7 +2,7 @@
 
 const _get = require('lodash/get')
 const _defaults = require('lodash/defaults')
-const { handlers: { done, error } } = require('..')
+const { handlers: { done, error }, classes: { Error } } = require('..')
 
 /**
  * Creates a findById middleware. 
@@ -60,7 +60,7 @@ module.exports = (model, id = 'body.id', opt = {}) => {
       opt.select,
       opt.options)
       .then(doc => {
-        if (!doc && opt.end) throw new Error('Document not found')
+        if (!doc && opt.end) throw new Error('document not found')
         if (doc && opt.populate) {
           return model.populate(doc, opt.populate)
         }

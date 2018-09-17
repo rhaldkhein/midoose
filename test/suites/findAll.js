@@ -315,7 +315,7 @@ describe('findAll', () => {
 
   })
 
-  it('should catch', done => {
+  it('should catch on error', done => {
 
     const res = mockRes(payload => {
       try {
