@@ -211,7 +211,7 @@ describe('findById', () => {
     )(req, res, next)
   })
 
-  it('should find but DO NOT end with custom key result', done => {
+  it('should find but DO NOT end and with custom key result', done => {
     const req = { body: { id: '103' } }
     const resJsonEnd = sinon.spy()
     const res = mockRes(resJsonEnd)

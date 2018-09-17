@@ -240,7 +240,7 @@ describe('create', () => {
 
   })
 
-  it('should create but DO NOT end with custom key result', done => {
+  it('should create but DO NOT end and with custom key result', done => {
 
     const stubCreate = sinon.stub(Model.User, 'create')
       .resolves({

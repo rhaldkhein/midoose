@@ -288,7 +288,7 @@ describe('findAll', () => {
 
   })
 
-  it('should find but DO NOT end with custom key result', done => {
+  it('should find but DO NOT end and with custom key result', done => {
 
     const resJsonEnd = sinon.spy()
     const res = mockRes(resJsonEnd)

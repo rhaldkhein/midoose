@@ -1,9 +1,9 @@
 'use strict'
 
 const _defaults = require('lodash/defaults')
-const { handlers: { done, error }, evalProps } = require('..')
+const { handlers: { done, error }, classes: { Error }, evalProps } = require('..')
 
-module.exports = (model, cond, opt = {}) => {
+module.exports = (model, cond = {}, opt = {}) => {
 
   _defaults(opt, {
     end: true,
@@ -18,12 +18,9 @@ module.exports = (model, cond, opt = {}) => {
       opt.select,
       opt.options)
       .then(doc => {
-        if (!doc && opt.end) throw new Error('Document not found')
+        if (!doc && opt.end) throw new Error('document not found')
         if (doc && opt.populate) {
-          return doc
-            .populate(opt.populate)
-            .execPopulate()
-            .return(doc)
+          return model.populate(doc, opt.populate)
         }
         return doc
       })

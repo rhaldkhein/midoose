@@ -130,7 +130,7 @@ describe('deleteById', () => {
 
   })
 
-  it('should delete but DO NOT end with custom key result', done => {
+  it('should delete but DO NOT end and with custom key result', done => {
 
     const resJsonEnd = sinon.spy()
     const res = mockRes(resJsonEnd)

@@ -2,8 +2,8 @@
 const _get = require('lodash/get')
 
 exports.evalProps = (obj, req, res) => {
-  let element, value
-  for (let key in obj) {
+  let key, element, value
+  for (key in obj) {
     element = obj[key]
     // Retain all non string values
     if (typeof element !== 'string') continue

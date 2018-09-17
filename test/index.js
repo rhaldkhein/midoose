@@ -21,10 +21,10 @@ global.mockRes = json => {
 
 // Sample data
 const users = [
-  { _id: '101', name: 'FooUser', age: 1, active: true },
-  { _id: '102', name: 'BarUser', age: 2, active: false },
-  { _id: '103', name: 'BazUser', age: 2, active: true },
-  { _id: '104', name: 'ZapUser', age: 3, active: false }
+  { _id: '101', name: 'FooUser', country: 'US', age: 1, active: true },
+  { _id: '102', name: 'BarUser', country: 'AE', age: 2, active: false },
+  { _id: '103', name: 'BazUser', country: 'US', age: 2, active: true },
+  { _id: '104', name: 'ZapUser', country: 'AE', age: 3, active: false }
 ]
 const posts = [
   { _id: '201', user: users[0]._id, title: 'FooPost', published: true },
