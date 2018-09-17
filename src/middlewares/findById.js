@@ -62,10 +62,7 @@ module.exports = (model, id = 'body.id', opt = {}) => {
       .then(doc => {
         if (!doc && opt.end) throw new Error('Document not found')
         if (doc && opt.populate) {
-          return doc
-            .populate(opt.populate)
-            .execPopulate()
-            .return(doc)
+          return model.populate(doc, opt.populate)
         }
         return doc
       })

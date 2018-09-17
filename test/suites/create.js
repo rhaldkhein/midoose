@@ -21,11 +21,11 @@ describe('create', () => {
   it('should create by array of fields (default)', done => {
 
     const stubCreate = sinon.stub(Model.User, 'create')
-      .returns(Promise.resolve({
+      .resolves({
         _id: shortid.generate(),
         name: req.body.name,
         age: req.body.age
-      }))
+      })
 
     const res = mockRes(payload => {
       try {
@@ -50,11 +50,11 @@ describe('create', () => {
   it('should create by array of fields from query', done => {
 
     const stubCreate = sinon.stub(Model.User, 'create')
-      .returns(Promise.resolve({
+      .resolves({
         _id: shortid.generate(),
         name: req.query.name,
         age: req.query.age
-      }))
+      })
 
     const res = mockRes(payload => {
       try {
@@ -79,7 +79,7 @@ describe('create', () => {
 
   })
 
-  it('should create with populate', done => {
+  it('should create and populate', done => {
 
     const req = {
       body: {
@@ -88,19 +88,19 @@ describe('create', () => {
     }
 
     const stubCreate = sinon.stub(Model.Post, 'create')
-      .returns(Promise.resolve({
+      .resolves({
         _id: shortid.generate()
-      }))
+      })
 
     const stubPopulate = sinon.stub(Model.Post, 'populate')
-      .returns(Promise.resolve({
+      .resolves({
         _id: shortid.generate(),
         ...({
           user: {
             _id: shortid.generate()
           },
         })
-      }))
+      })
 
 
     const res = mockRes(payload => {
@@ -130,14 +130,14 @@ describe('create', () => {
   it('should create by function of fields', done => {
 
     const stubCreate = sinon.stub(Model.User, 'create')
-      .returns(Promise.resolve({
+      .resolves({
         _id: shortid.generate(),
         ...({
           name: req.body.name,
           age: 101,
           active: false
         })
-      }))
+      })
 
     const res = mockRes(payload => {
       try {
@@ -168,7 +168,7 @@ describe('create', () => {
   it('should create by function of multiple documents', done => {
 
     const stubCreate = sinon.stub(Model.User, 'create')
-      .returns(Promise.resolve([
+      .resolves([
         {
           _id: shortid.generate(),
           name: req.body.name
@@ -177,7 +177,7 @@ describe('create', () => {
           _id: shortid.generate(),
           name: req.query.name
         }
-      ]))
+      ])
 
     const res = mockRes(payload => {
       try {
@@ -210,10 +210,10 @@ describe('create', () => {
   it('should create but DO NOT end', done => {
 
     const stubCreate = sinon.stub(Model.User, 'create')
-      .returns(Promise.resolve({
+      .resolves({
         _id: shortid.generate(),
         ...req.body
-      }))
+      })
 
     const resJsonEnd = sinon.spy()
     const res = mockRes(resJsonEnd)
@@ -243,10 +243,10 @@ describe('create', () => {
   it('should create but DO NOT end with custom key result', done => {
 
     const stubCreate = sinon.stub(Model.User, 'create')
-      .returns(Promise.resolve({
+      .resolves({
         _id: shortid.generate(),
         ...req.body
-      }))
+      })
 
     const resJsonEnd = sinon.spy()
     const res = mockRes(resJsonEnd)
@@ -277,7 +277,7 @@ describe('create', () => {
   it('should catch', done => {
 
     const stubCreate = sinon.stub(Model.User, 'create')
-      .returns(Promise.reject(new Error('sample error')))
+      .rejects(new Error('sample error'))
 
     const res = mockRes(payload => {
       try {
