@@ -16,9 +16,11 @@ describe('deleteById', () => {
 
   before(() => {
     stub = sinon.stub(Model.User, 'findByIdAndDelete')
+    stub.withArgs('error').returns({ exec: () => Promise.reject(new Error('sample error')) })
+    stub.withArgs('options', sinon.match.any)
+      .returns({ exec: () => Promise.reject(new Error('ok options')) })
     stub.withArgs('123').returns({ exec: () => Promise.resolve({ _id: '123' }) })
     stub.withArgs('456').returns({ exec: () => Promise.resolve({ _id: '456' }) })
-    stub.withArgs('error').returns({ exec: () => Promise.reject(new Error('sample error')) })
     stub.returns({ exec: () => Promise.resolve(null) })
   })
 
@@ -154,6 +156,25 @@ describe('deleteById', () => {
       }
     )(req, res, next)
 
+  })
+
+  it('should require query options', done => {
+    const req = {}
+    const res = mockRes(payload => {
+      try {
+        // This is a fake Error. A hack to check that options is 
+        // required for model query.
+        expect(payload).to.be.instanceOf(Error)
+          .with.property('message', 'ok options')
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+    deleteById(
+      Model.User,
+      () => 'options'
+    )(req, res)
   })
 
   it('should catch on error', done => {

@@ -20,7 +20,7 @@ module.exports = (model, cond, opt = {}) => {
       '+_id',
       opt.options)
       .then(doc => {
-        if (doc && opt.end) throw new Error('Document must not exist')
+        if (doc && opt.end) throw new Error('document must not exist')
         res.locals[opt.key] = opt.document ? doc : !doc
         next()
         return null

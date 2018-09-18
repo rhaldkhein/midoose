@@ -274,6 +274,32 @@ describe('create', () => {
 
   })
 
+  it('should require query options', done => {
+
+    const stubCreate = sinon.stub(Model.User, 'create')
+    stubCreate.withArgs(sinon.match.any, sinon.match.any).rejects(new Error('ok options'))
+    stubCreate.resolves()
+
+    const res = mockRes(payload => {
+      try {
+        // This is a fake Error. A hack to check that options is 
+        // required for model query.
+        expect(payload).to.be.instanceOf(Error)
+          .with.property('message', 'ok options')
+        done()
+      } catch (error) {
+        done(error)
+      }
+      stubCreate.restore()
+    })
+
+    create(
+      Model.User,
+      () => ({})
+    )(req, res)
+
+  })
+
   it('should catch on error', done => {
 
     const stubCreate = sinon.stub(Model.User, 'create')
@@ -296,5 +322,7 @@ describe('create', () => {
     )(req, res)
 
   })
+
+
 
 })

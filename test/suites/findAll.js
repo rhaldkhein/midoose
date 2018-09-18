@@ -26,6 +26,9 @@ describe('findAll', () => {
      * User stubs
      */
     stubUserFind = sinon.stub(Model.User, 'find')
+    stubUserFind.withArgs('error').rejects(new Error('sample error'))
+    stubUserFind.withArgs('options', sinon.match.any, sinon.match.any)
+      .rejects(new Error('ok options'))
     stubUserFind.withArgs({ active: true }).resolves(
       _filter(samples.users, { active: true })
     )
@@ -37,9 +40,6 @@ describe('findAll', () => {
     )
     stubUserFind.withArgs(sinon.match.any, 'name').resolves(
       samples.users.map(item => ({ _id: item._id, name: item.name }))
-    )
-    stubUserFind.withArgs('error').rejects(
-      new Error('sample error')
     )
     stubUserFind.resolves(samples.users)
 
@@ -313,6 +313,25 @@ describe('findAll', () => {
       }
     )(req, res, next)
 
+  })
+
+  it('should require query options', done => {
+    const req = {}
+    const res = mockRes(payload => {
+      try {
+        // This is a fake Error. A hack to check that options is 
+        // required for model query.
+        expect(payload).to.be.instanceOf(Error)
+          .with.property('message', 'ok options')
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+    findAll(
+      Model.User,
+      () => 'options'
+    )(req, res)
   })
 
   it('should catch on error', done => {

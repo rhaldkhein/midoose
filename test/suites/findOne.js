@@ -1,6 +1,5 @@
 const sinon = require('sinon')
 const _find = require('lodash/find')
-const _filter = require('lodash/filter')
 const _isMatch = require('lodash/isMatch')
 const findOne = require('../../src/middlewares/findOne')
 
@@ -17,6 +16,8 @@ describe('findOne', () => {
      */
     stubUserFindOne = sinon.stub(Model.User, 'findOne')
     stubUserFindOne.withArgs('error').rejects(new Error('sample error'))
+    stubUserFindOne.withArgs('options', sinon.match.any, sinon.match.any)
+      .rejects(new Error('ok options'))
     samples.users.reverse().forEach(item => {
       let matcher = sinon.match(value => _isMatch(item, value))
       stubUserFindOne.withArgs(matcher).resolves(item)
@@ -83,7 +84,7 @@ describe('findOne', () => {
     })
     findOne(
       Model.User,
-      { country: `$AE` }
+      { country: '$AE' }
     )(req, res)
   })
 
@@ -235,6 +236,27 @@ describe('findOne', () => {
       }
     )(req, res, next)
 
+  })
+
+  it('should require query options', done => {
+    const req = {}
+    const res = mockRes(payload => {
+      try {
+        // This is a fake Error. A hack to check that options is 
+        // required for model query.
+        // If error is `document not found`. That means that `options`
+        // is missing and should be fixed.
+        expect(payload).to.be.instanceOf(Error)
+          .with.property('message', 'ok options')
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+    findOne(
+      Model.User,
+      () => 'options'
+    )(req, res)
   })
 
   it('should catch on error', done => {
