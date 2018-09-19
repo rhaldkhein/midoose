@@ -2,9 +2,12 @@
 
 const _pick = require('lodash/pick')
 const _defaults = require('lodash/defaults')
-const { handlers: { done, error } } = require('..')
+const {
+  handlers: { done, error },
+  evalProps
+} = require('..')
 
-module.exports = (model, cond, docs, opt = {}) => {
+module.exports = (model, cond, doc, opt = {}) => {
 
   _defaults(opt, {
     end: true,
@@ -12,18 +15,23 @@ module.exports = (model, cond, docs, opt = {}) => {
     from: 'body'
   })
 
-  let isFunc = typeof docs === 'function'
+  let isFuncCond = typeof cond === 'function'
+  let isFuncDoc = typeof doc === 'function'
 
   return (req, res, next) => {
 
-    // Get docs data
-    let docs = isFunc ? docs(req, res) : _pick(req[opt.from], docs)
+    // Get data be placed
+    let docNew = isFuncDoc ? doc(req, res) : _pick(req[opt.from], doc)
 
     // Add more data to docs through options object
-    if (opt.moreDocs) docs = opt.moreDocs(docs, req, res)
+    if (opt.moreDoc) docNew = opt.moreDoc(docNew, req, res)
 
     // Trigger create
-    model.update(docs, opt.options)
+    model.updateMany(
+      // Criteria to find docs
+      isFuncCond ? cond(req, res) : evalProps(cond, req, res),
+      docNew,
+      opt.options)
       .then(documents => {
         if (opt.populate) {
           return model.populate(documents, opt.populate)

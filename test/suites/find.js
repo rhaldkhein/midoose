@@ -1,9 +1,9 @@
 const sinon = require('sinon')
 const _find = require('lodash/find')
 const _filter = require('lodash/filter')
-const findAll = require('../../src/middlewares/findAll')
+const find = require('../../src/middlewares/find')
 
-describe('findAll', () => {
+describe('find', () => {
 
   let stubUserFind
   let stubPostFind
@@ -91,7 +91,7 @@ describe('findAll', () => {
       }
     })
 
-    findAll(
+    find(
       Model.User
     )(req, res)
 
@@ -111,7 +111,7 @@ describe('findAll', () => {
       }
     })
 
-    findAll(
+    find(
       Model.Post,
       { published: false }
     )(req, res)
@@ -131,7 +131,7 @@ describe('findAll', () => {
       }
     })
 
-    findAll(
+    find(
       Model.User,
       { active: 'body.active' }
     )(req, res)
@@ -153,7 +153,7 @@ describe('findAll', () => {
 
     res.locals.age = 2
 
-    findAll(
+    find(
       Model.User,
       {
         active: 'body.active',
@@ -175,7 +175,7 @@ describe('findAll', () => {
       }
     })
 
-    findAll(
+    find(
       Model.Post,
       (req) => {
         return { published: req.query.published }
@@ -199,7 +199,7 @@ describe('findAll', () => {
       }
     })
 
-    findAll(
+    find(
       Model.User,
       {},
       {
@@ -224,7 +224,7 @@ describe('findAll', () => {
       }
     })
 
-    findAll(
+    find(
       Model.Post,
       {},
       {
@@ -248,7 +248,7 @@ describe('findAll', () => {
       }
     })
 
-    findAll(
+    find(
       Model.User,
       {},
       {
@@ -278,7 +278,7 @@ describe('findAll', () => {
       }
     }
 
-    findAll(
+    find(
       Model.User,
       {},
       {
@@ -304,7 +304,7 @@ describe('findAll', () => {
       }
     }
 
-    findAll(
+    find(
       Model.User,
       {},
       {
@@ -328,7 +328,7 @@ describe('findAll', () => {
         done(error)
       }
     })
-    findAll(
+    find(
       Model.User,
       () => 'options'
     )(req, res)
@@ -346,7 +346,7 @@ describe('findAll', () => {
       }
     })
 
-    findAll(
+    find(
       Model.User,
       () => 'error'
     )(req, res)
