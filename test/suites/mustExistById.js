@@ -1,8 +1,7 @@
 const sinon = require('sinon')
-const _isMatch = require('lodash/isMatch')
-const mustExist = require('../../src/middlewares/mustExist')
+const mustExistById = require('../../src/middlewares/mustExistById')
 
-describe('mustExist', () => {
+describe('mustExistById', () => {
 
   let stubUserFindOne
 
@@ -11,14 +10,13 @@ describe('mustExist', () => {
     /**
      * User stubs
      */
-    stubUserFindOne = sinon.stub(Model.User, 'findOne')
+    stubUserFindOne = sinon.stub(Model.User, 'findById')
     stubUserFindOne.withArgs('error').rejects(new Error('sample error'))
     stubUserFindOne.withArgs('options', sinon.match.any, sinon.match.any)
       .rejects(new Error('ok options'))
     samples.users.reverse().forEach(item => {
-      let matcher = sinon.match(value => _isMatch(item, value))
-      stubUserFindOne.withArgs(matcher).resolves(item)
-      stubUserFindOne.withArgs(matcher, 'name').resolves({
+      stubUserFindOne.withArgs(item._id).resolves(item)
+      stubUserFindOne.withArgs(item._id, 'name').resolves({
         _id: item._id,
         name: item.name
       })
@@ -45,9 +43,8 @@ describe('mustExist', () => {
         done(error)
       }
     }
-    mustExist(
-      Model.User,
-      { _id: 'body.id' }
+    mustExistById(
+      Model.User
     )(req, res, next)
   })
 
@@ -65,13 +62,13 @@ describe('mustExist', () => {
         done(error)
       }
     }
-    mustExist(
+    mustExistById(
       Model.User,
-      req => ({ _id: req.body.id })
+      req => req.body.id
     )(req, res, next)
   })
 
-  it('should exit on no document if `end` is true', done => {
+  it('should exit on no document and `end` is true', done => {
     const req = { body: { id: 'no_id' } }
     const res = mockRes(payload => {
       try {
@@ -83,16 +80,16 @@ describe('mustExist', () => {
       }
     })
     const next = () => null
-    mustExist(
+    mustExistById(
       Model.User,
-      { _id: 'body.id' },
+      'body.id',
       {
         end: true // Default
       }
     )(req, res, next)
   })
 
-  it('should NOT exit on no document if `end` is false', done => {
+  it('should NOT exit on no document and `end` is false', done => {
     const req = { body: { id: 'no_id' } }
     const resJsonEnd = sinon.spy()
     const res = mockRes(resJsonEnd)
@@ -106,9 +103,9 @@ describe('mustExist', () => {
         done(error)
       }
     }
-    mustExist(
+    mustExistById(
       Model.User,
-      { _id: 'body.id' },
+      'body.id',
       {
         end: false
       }
@@ -129,9 +126,9 @@ describe('mustExist', () => {
         done(error)
       }
     }
-    mustExist(
+    mustExistById(
       Model.User,
-      { _id: 'body.id' },
+      'body.id',
       {
         document: true,
         key: 'customResult'
@@ -152,7 +149,7 @@ describe('mustExist', () => {
         done(error)
       }
     })
-    mustExist(
+    mustExistById(
       Model.User,
       () => 'options'
     )(req, res)
@@ -169,7 +166,7 @@ describe('mustExist', () => {
         done(error)
       }
     })
-    mustExist(
+    mustExistById(
       Model.User,
       () => 'error'
     )(req, res)

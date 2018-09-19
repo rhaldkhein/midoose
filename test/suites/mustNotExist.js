@@ -1,8 +1,8 @@
 const sinon = require('sinon')
 const _isMatch = require('lodash/isMatch')
-const mustExist = require('../../src/middlewares/mustExist')
+const mustNotExist = require('../../src/middlewares/mustNotExist')
 
-describe('mustExist', () => {
+describe('mustNotExist', () => {
 
   let stubUserFindOne
 
@@ -32,7 +32,7 @@ describe('mustExist', () => {
   })
 
   it('should result to true (default)', done => {
-    const req = { body: { id: '103' } }
+    const req = { body: { id: 'no_id' } }
     const resJsonEnd = sinon.spy()
     const res = mockRes(resJsonEnd)
     const next = () => {
@@ -45,14 +45,14 @@ describe('mustExist', () => {
         done(error)
       }
     }
-    mustExist(
+    mustNotExist(
       Model.User,
       { _id: 'body.id' }
     )(req, res, next)
   })
 
   it('should result to true by function condition', done => {
-    const req = { body: { id: '104' } }
+    const req = { body: { id: 'no_id' } }
     const resJsonEnd = sinon.spy()
     const res = mockRes(resJsonEnd)
     const next = () => {
@@ -65,25 +65,25 @@ describe('mustExist', () => {
         done(error)
       }
     }
-    mustExist(
+    mustNotExist(
       Model.User,
       req => ({ _id: req.body.id })
     )(req, res, next)
   })
 
-  it('should exit on no document if `end` is true', done => {
-    const req = { body: { id: 'no_id' } }
+  it('should exit on found document if `end` is true', done => {
+    const req = { body: { id: '103' } }
     const res = mockRes(payload => {
       try {
         expect(payload).to.be.instanceOf(Error)
-          .with.property('message', 'document must exist')
+          .with.property('message', 'document must not exist')
         done()
       } catch (error) {
         done(error)
       }
     })
     const next = () => null
-    mustExist(
+    mustNotExist(
       Model.User,
       { _id: 'body.id' },
       {
@@ -92,8 +92,8 @@ describe('mustExist', () => {
     )(req, res, next)
   })
 
-  it('should NOT exit on no document if `end` is false', done => {
-    const req = { body: { id: 'no_id' } }
+  it('should NOT exit on found document if `end` is false', done => {
+    const req = { body: { id: '103' } }
     const resJsonEnd = sinon.spy()
     const res = mockRes(resJsonEnd)
     const next = () => {
@@ -106,7 +106,7 @@ describe('mustExist', () => {
         done(error)
       }
     }
-    mustExist(
+    mustNotExist(
       Model.User,
       { _id: 'body.id' },
       {
@@ -115,26 +115,74 @@ describe('mustExist', () => {
     )(req, res, next)
   })
 
-  it('should return document instead of boolean with custom result key', done => {
-    const req = { body: { id: '102' } }
+  it('should NOT exit and with custom result key if `end` is false', done => {
+    const req = { body: { id: '103' } }
     const resJsonEnd = sinon.spy()
     const res = mockRes(resJsonEnd)
     const next = () => {
       try {
         expect(resJsonEnd).to.have.not.been.called
         expect(res.locals).to.be.property('customResult')
-        expect(res.locals.customResult.name).to.be.equal('BarUser')
+        expect(res.locals.customResult).to.be.false
         done()
       } catch (error) {
         done(error)
       }
     }
-    mustExist(
+    mustNotExist(
       Model.User,
       { _id: 'body.id' },
       {
-        document: true,
+        end: false,
         key: 'customResult'
+      }
+    )(req, res, next)
+  })
+
+  it('should return found document instead of boolean if `end` is false', done => {
+    const req = { body: { id: '102' } }
+    const resJsonEnd = sinon.spy()
+    const res = mockRes(resJsonEnd)
+    const next = () => {
+      try {
+        expect(resJsonEnd).to.have.not.been.called
+        expect(res.locals).to.be.property('result')
+        expect(res.locals.result.name).to.be.equal('BarUser')
+        done()
+      } catch (error) {
+        done(error)
+      }
+    }
+    mustNotExist(
+      Model.User,
+      { _id: 'body.id' },
+      {
+        end: false, // This is required to return the document
+        document: true
+      }
+    )(req, res, next)
+  })
+
+  it('should return `null` for not found instead of boolean if `end` is false', done => {
+    const req = { body: { id: 'no_id' } }
+    const resJsonEnd = sinon.spy()
+    const res = mockRes(resJsonEnd)
+    const next = () => {
+      try {
+        expect(resJsonEnd).to.have.not.been.called
+        expect(res.locals).to.be.property('result')
+        expect(res.locals.result).to.be.null
+        done()
+      } catch (error) {
+        done(error)
+      }
+    }
+    mustNotExist(
+      Model.User,
+      { _id: 'body.id' },
+      {
+        end: false, // This is required to return the document
+        document: true
       }
     )(req, res, next)
   })
@@ -152,7 +200,7 @@ describe('mustExist', () => {
         done(error)
       }
     })
-    mustExist(
+    mustNotExist(
       Model.User,
       () => 'options'
     )(req, res)
@@ -169,7 +217,7 @@ describe('mustExist', () => {
         done(error)
       }
     })
-    mustExist(
+    mustNotExist(
       Model.User,
       () => 'error'
     )(req, res)

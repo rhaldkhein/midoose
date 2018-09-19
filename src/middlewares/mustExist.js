@@ -18,7 +18,11 @@ module.exports = (model, cond, opt = {}) => {
 
   return (req, res, next) => {
     model.findOne(
+      // Auto resolve condition
       isFunc ? cond(req, res) : evalProps(cond, req, res),
+      // Return all fields if document is true
+      !opt.document && '+_id',
+      // Options for model query
       opt.options)
       .then(doc => {
         if (!doc && opt.end) throw new Error('document must exist')

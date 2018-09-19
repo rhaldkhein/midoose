@@ -2,7 +2,9 @@
 
 const _get = require('lodash/get')
 const _defaults = require('lodash/defaults')
-const { handlers: { error } } = require('..')
+const {
+  handlers: { error }
+} = require('..')
 
 module.exports = (model, id = 'body.id', opt = {}) => {
 
@@ -16,10 +18,13 @@ module.exports = (model, id = 'body.id', opt = {}) => {
 
   return (req, res, next) => {
     model.findById(
+      // Auto resolve id
       (isFunc && id(req, res)) ||
       _get(req, id) ||
       _get(res, id),
-      '+_id',
+      // Return all fields if document is true
+      !opt.document && '+_id',
+      // Options for model query
       opt.options)
       .then(doc => {
         if (!doc && opt.end) throw new Error('document must exist')

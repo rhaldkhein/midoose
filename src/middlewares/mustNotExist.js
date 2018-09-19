@@ -1,7 +1,10 @@
 'use strict'
 
 const _defaults = require('lodash/defaults')
-const { handlers: { error }, evalProps } = require('..')
+const {
+  handlers: { error },
+  evalProps
+} = require('..')
 
 module.exports = (model, cond, opt = {}) => {
 
@@ -14,10 +17,9 @@ module.exports = (model, cond, opt = {}) => {
   let isFunc = typeof cond === 'function'
 
   return (req, res, next) => {
-    let evalCond = isFunc ? cond(req, res) : evalProps(cond, req, res)
     model.findOne(
-      evalCond,
-      '+_id',
+      isFunc ? cond(req, res) : evalProps(cond, req, res),
+      !opt.document && '+_id',
       opt.options)
       .then(doc => {
         if (doc && opt.end) throw new Error('document must not exist')

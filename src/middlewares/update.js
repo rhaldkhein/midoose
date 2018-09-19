@@ -4,7 +4,7 @@ const _pick = require('lodash/pick')
 const _defaults = require('lodash/defaults')
 const { handlers: { done, error } } = require('..')
 
-module.exports = (model, cond, doc, opt = {}) => {
+module.exports = (model, cond, docs, opt = {}) => {
 
   _defaults(opt, {
     end: true,
@@ -24,19 +24,15 @@ module.exports = (model, cond, doc, opt = {}) => {
 
     // Trigger create
     model.update(docs, opt.options)
-      .then(docs => {
+      .then(documents => {
         if (opt.populate) {
-          if (Array.isArray(docs)) {
-            return model.populate(docs, opt.populate)
-          } else {
-            return docs.populate(opt.populate).execPopulate()
-          }
+          return model.populate(documents, opt.populate)
         }
-        return docs
+        return documents
       })
-      .then(docs => {
-        if (opt.end) return done(res, docs)
-        else res.locals[opt.key] = docs
+      .then(documents => {
+        if (opt.end) return done(res, documents)
+        else res.locals[opt.key] = documents
         next()
         return null
       })

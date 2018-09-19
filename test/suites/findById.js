@@ -273,7 +273,7 @@ describe('findById', () => {
     )(req, res)
   })
 
-  it('should catch for no document and `end` is true', done => {
+  it('should catch for no document if `end` is true', done => {
     const req = { body: { id: 'no_id' } }
     const res = mockRes(payload => {
       try {
