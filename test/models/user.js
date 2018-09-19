@@ -6,8 +6,12 @@ const Schema = mongoose.Schema
 const schema = new Schema({
 
   name: String,
+
   age: Number,
-  active: Boolean
+
+  active: Boolean,
+
+  country: String
 
 })
 

@@ -1,35 +1,26 @@
 'use strict'
 
-const _pick = require('lodash/pick')
 const _defaults = require('lodash/defaults')
 const {
-  handlers: { done, error },
-  evalProps
+  handlers: { done, error }
 } = require('..')
 
-module.exports = (model, cond, doc, opt = {}) => {
+module.exports = (model, cond, fields, opt = {}) => {
 
   _defaults(opt, {
     end: true,
-    key: 'result',
-    from: 'body'
+    key: 'result'
   })
 
-  let isFuncCond = typeof cond === 'function'
-  let isFuncDoc = typeof doc === 'function'
-
   return (req, res, next) => {
-
     // Get data be placed
-    let docNew = isFuncDoc ? doc(req, res) : _pick(req[opt.from], doc)
-
+    let docNew = fields(req, res)
     // Add more data to docs through options object
     if (opt.moreDoc) docNew = opt.moreDoc(docNew, req, res)
-
     // Trigger create
     model.updateMany(
       // Criteria to find docs
-      isFuncCond ? cond(req, res) : evalProps(cond, req, res),
+      cond(req, res),
       docNew,
       opt.options)
       .then(documents => {

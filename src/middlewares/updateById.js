@@ -1,22 +1,13 @@
 'use strict'
 
-const _get = require('lodash/get')
 const updateOne = require('./updateOne')
 
-module.exports = (model, id = 'body.id', doc = {}, opt = {}) => {
-
-  const isFunc = typeof id === 'function'
+module.exports = (model, id, fields, opt = {}) => {
 
   return updateOne(
     model,
-    (req, res) => {
-      return {
-        _id: (isFunc && id(req, res)) ||
-          _get(req, id) ||
-          _get(res, id)
-      }
-    },
-    doc,
+    (req, res) => ({ _id: id(req, res) }),
+    fields,
     opt
   )
 

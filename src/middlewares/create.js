@@ -4,7 +4,7 @@ const _pick = require('lodash/pick')
 const _defaults = require('lodash/defaults')
 const { handlers: { done, error } } = require('..')
 
-module.exports = (model, docs, opt = {}) => {
+module.exports = (model, fields, opt = {}) => {
 
   _defaults(opt, {
     end: true,
@@ -12,12 +12,12 @@ module.exports = (model, docs, opt = {}) => {
     from: 'body'
   })
 
-  let isFunc = typeof docs === 'function'
+  let isFunc = typeof fields === 'function'
 
   return (req, res, next) => {
 
-    // Get docs data
-    let docsNew = isFunc ? docs(req, res) : _pick(req[opt.from], docs)
+    // Get single or multiple docs data
+    let docsNew = isFunc ? fields(req, res) : _pick(req[opt.from], fields)
 
     // Add more data to docs through options object
     if (opt.moreDocs) docsNew = opt.moreDocs(docsNew, req, res)
