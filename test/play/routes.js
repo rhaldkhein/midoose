@@ -20,7 +20,7 @@ module.exports = app => {
   app.post('/update/id',
     updateById(
       Model.Post,
-      body({ _id: 'id' }),
+      body('id'), // Resolves to value of `body.id`
       body(['title', 'published'])
     )
   )
@@ -28,7 +28,7 @@ module.exports = app => {
   app.post('/update/one',
     updateOne(
       Model.Post,
-      body('id'), // Resolves to value of `body.id`
+      body({ _id: 'id' }),
       body(['title', 'published']) // Resolves to { title: req.body.title, ... }
     )
   )
