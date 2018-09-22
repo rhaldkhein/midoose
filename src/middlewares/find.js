@@ -1,7 +1,8 @@
 'use strict'
 
 const _defaults = require('lodash/defaults')
-const { handlers: { done, error }, evalProps } = require('..')
+const { raw } = require('../selector')
+const { handlers: { done, error } } = require('..')
 
 /**
  * Creates a findAll middleware. 
@@ -20,10 +21,8 @@ const { handlers: { done, error }, evalProps } = require('..')
  * @param {Object} model  
  *  - Mongoose model to find from
  * 
- * @param {Object|Function} cond   
- *  - Optional. Mongoose `condition` argument for `find`. For dynamic conditions,
- *    you can set a function that returns the condition or object that evaluates
- *    its properties from req or res
+ * @param {Selector} condSelector   
+ *  - Optional. Selector function that resolves to condition
  * 
  * @param {Object} opt    
  *  - Optional. Options object
@@ -44,18 +43,16 @@ const { handlers: { done, error }, evalProps } = require('..')
  *  options {Object}  - Mongoose `options` argument for `find`
  * 
  */
-module.exports = (model, cond = {}, opt = {}) => {
+module.exports = (model, condSelector = raw({}), opt = {}) => {
 
   _defaults(opt, {
     end: true,
     key: 'result'
   })
 
-  const _isFunc = typeof cond === 'function'
-
   return (req, res, next) => {
     model.find(
-      _isFunc ? cond(req, res) : evalProps(cond, req, res),
+      condSelector(req, res),
       opt.select,
       opt.options)
       .then(docs => {

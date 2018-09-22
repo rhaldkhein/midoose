@@ -1,23 +1,19 @@
 'use strict'
 
 const _defaults = require('lodash/defaults')
-const {
-  handlers: { done, error },
-  evalProps
-} = require('..')
+const { raw } = require('../selector')
+const { handlers: { done, error } } = require('..')
 
-module.exports = (model, cond = {}, opt = {}) => {
+module.exports = (model, condSelector = raw({}), opt = {}) => {
 
   _defaults(opt, {
     end: true,
     key: 'result'
   })
 
-  const isFunc = typeof cond === 'function'
-
   return (req, res, next) => {
     model.findOne(
-      isFunc ? cond(req, res) : evalProps(cond, req, res),
+      condSelector(req, res),
       opt.select,
       opt.options)
       .then(doc => {

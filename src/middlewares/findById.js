@@ -1,10 +1,8 @@
 'use strict'
 
-const _get = require('lodash/get')
 const _defaults = require('lodash/defaults')
-const {
-  handlers: { done, error }
-} = require('..')
+const { body } = require('../selector')
+const { handlers: { done, error } } = require('..')
 
 /**
  * Creates a findById middleware. 
@@ -23,9 +21,8 @@ const {
  * @param {Object} model  
  *  - Mongoose model to find from
  * 
- * @param {Object|Function} id   
- *  - Optional. Custom function to get the id or a string to resolve from req or 
- *    res object. If not specified, it will try to get from `req.body.id`
+ * @param {Selector} idSelector   
+ *  - Optional. Selector function
  * 
  * @param {Object} opt    
  *  - Optional. Options object
@@ -45,20 +42,16 @@ const {
  *  options {Object}  - Mongoose `options` argument for `findById`
  * 
  */
-module.exports = (model, id = 'body.id', opt = {}) => {
+module.exports = (model, idSelector = body('id'), opt = {}) => {
 
   _defaults(opt, {
     end: true,
     key: 'result'
   })
 
-  const isFunc = typeof id === 'function'
-
   return (req, res, next) => {
     model.findById(
-      (isFunc && id(req, res)) ||
-      _get(req, id) ||
-      _get(res, id),
+      idSelector(req, res),
       opt.select,
       opt.options)
       .then(doc => {

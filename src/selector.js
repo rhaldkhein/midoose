@@ -39,41 +39,22 @@ const translateArray = (src, from) => {
   return to
 }
 
-exports.body = any => {
+const getMiddleware = (any, key, isRes) => {
   if (Array.isArray(any))
-    return req => translateArray(req.body, any)
+    return (req, res) => translateArray((isRes ? res : req)[key], any)
   else if (typeof any === 'object')
-    return req => translateObject(req.body, any)
+    return (req, res) => translateObject((isRes ? res : req)[key], any)
   else
-    return req => translateValue(req.body, any)
+    return (req, res) => translateValue((isRes ? res : req)[key], any)
 }
 
-exports.query = any => {
-  if (Array.isArray(any))
-    return req => translateArray(req.query, any)
-  else if (typeof any === 'object')
-    return req => translateObject(req.query, any)
-  else
-    return req => translateValue(req.query, any)
-}
+exports.body = any => getMiddleware(any, 'body')
 
-exports.params = any => {
-  if (Array.isArray(any))
-    return req => translateArray(req.params, any)
-  else if (typeof any === 'object')
-    return req => translateObject(req.params, any)
-  else
-    return req => translateValue(req.params, any)
-}
+exports.query = any => getMiddleware(any, 'query')
 
-exports.locals = any => {
-  if (Array.isArray(any))
-    return (req, res) => translateArray(res.locals, any)
-  else if (typeof any === 'object')
-    return (req, res) => translateObject(res.locals, any)
-  else
-    return (req, res) => translateValue(res.locals, any)
-}
+exports.params = any => getMiddleware(any, 'params')
+
+exports.locals = any => getMiddleware(any, 'locals', true)
 
 exports.raw = any => () => any
 

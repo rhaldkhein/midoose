@@ -1,6 +1,6 @@
-const { body } = require('../../../src/resolver')
+const { body } = require('../../../src/selector')
 
-describe('resolver for body', () => {
+describe('selector for body', () => {
 
   const req = {
     body: {
@@ -17,26 +17,26 @@ describe('resolver for body', () => {
 
   const res = {}
 
-  it('should resolve to string', () => {
+  it('should select a value from body', () => {
 
-    let resolver, data
+    let selector, data
 
-    resolver = body('name')
-    data = resolver(req, res)
+    selector = body('name')
+    data = selector(req, res)
 
     expect(data).to.be.equal('Foo')
 
   })
 
-  it('should resolve to object from body using object', () => {
+  it('should select values from body using object', () => {
 
-    let resolver, data
+    let selector, data
 
-    resolver = body({
+    selector = body({
       ageNow: 'age',
       isActive: 'active'
     })
-    data = resolver(req, res)
+    data = selector(req, res)
 
     expect(data.age).to.be.undefined
     expect(data.ageNow).to.be.equal(28)
@@ -45,15 +45,15 @@ describe('resolver for body', () => {
 
   })
 
-  it('should resolve to object from body using array', () => {
+  it('should select values from body using array', () => {
 
-    let resolver, data
+    let selector, data
 
-    resolver = body([
+    selector = body([
       'age',
       'posts'
     ])
-    data = resolver(req, res)
+    data = selector(req, res)
 
     expect(data.age).to.be.equal(28)
     expect(data.posts)

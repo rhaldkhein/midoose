@@ -3,7 +3,7 @@
 const _defaults = require('lodash/defaults')
 const { handlers: { done, error } } = require('..')
 
-module.exports = (model, docsResolver, opt = {}) => {
+module.exports = (model, docsSelector, opt = {}) => {
 
   _defaults(opt, {
     end: true,
@@ -12,7 +12,7 @@ module.exports = (model, docsResolver, opt = {}) => {
 
   return (req, res, next) => {
 
-    let docsNew = docsResolver(req, res)
+    let docsNew = docsSelector(req, res)
 
     // Add more data to docs through options object
     if (opt.moreDocs) docsNew = opt.moreDocs(docsNew, req, res)
