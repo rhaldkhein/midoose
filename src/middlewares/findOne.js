@@ -26,7 +26,7 @@ module.exports = (model, condSelector = raw({}), opt = {}) => {
       .then(doc => {
         if (opt.end) return done(res, doc)
         else res.locals[opt.key] = doc
-        next()
+        next(opt.next)
         return null
       })
       .catch(err => error(res, err))

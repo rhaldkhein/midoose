@@ -1,11 +1,9 @@
 'use strict'
 
 const _defaults = require('lodash/defaults')
-const {
-  handlers: { done, error },
-} = require('..')
+const { handlers: { done, error } } = require('..')
 
-module.exports = (model, cond, fields, opt = {}) => {
+module.exports = (model, condSelector, docSelector, opt = {}) => {
 
   _defaults(opt, {
     end: true,
@@ -14,13 +12,13 @@ module.exports = (model, cond, fields, opt = {}) => {
 
   return (req, res, next) => {
     // Get data be placed
-    let docNew = fields(req, res)
+    let docNew = docSelector(req, res)
     // Add more data to docs through options object
     if (opt.moreDoc) docNew = opt.moreDoc(docNew, req, res)
     // Trigger create
     model.updateOne(
       // Criteria to find docs
-      cond(req, res),
+      condSelector(req, res),
       docNew,
       opt.options)
       .then(documents => {
@@ -32,7 +30,7 @@ module.exports = (model, cond, fields, opt = {}) => {
       .then(documents => {
         if (opt.end) return done(res, documents)
         else res.locals[opt.key] = documents
-        next()
+        next(opt.next)
         return null
       })
       .catch(err => error(res, err))

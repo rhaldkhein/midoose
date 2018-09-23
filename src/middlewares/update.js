@@ -32,7 +32,7 @@ module.exports = (model, cond, fields, opt = {}) => {
       .then(documents => {
         if (opt.end) return done(res, documents)
         else res.locals[opt.key] = documents
-        next()
+        next(opt.next)
         return null
       })
       .catch(err => error(res, err))

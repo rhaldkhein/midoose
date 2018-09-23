@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/rhaldkhein/midoose#readme",
   "dependencies": {
+    "async.parallel": "^0.5.2",
     "body-parser": "^1.18.3"
   },
   "devDependencies": {

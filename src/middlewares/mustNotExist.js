@@ -19,7 +19,7 @@ module.exports = (model, condSelector, opt = {}) => {
       .then(doc => {
         if (doc && opt.end) throw new Error('document must not exist')
         res.locals[opt.key] = opt.document ? doc : !doc
-        next()
+        next(opt.next)
         return null
       })
       .catch(err => error(res, err))

@@ -1,7 +1,7 @@
 'use strict'
 
 const _defaults = require('lodash/defaults')
-const update = require('./update')
+const updateOne = require('./updateOne')
 
 module.exports = (model, condSelector, docSelector, opt = {}) => {
 
@@ -9,7 +9,7 @@ module.exports = (model, condSelector, docSelector, opt = {}) => {
     options: { upsert: true }
   })
 
-  return update(
+  return updateOne(
     model,
     condSelector,
     docSelector,

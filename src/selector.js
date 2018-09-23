@@ -1,8 +1,9 @@
 'use strict'
 
+const { enums } = require('.')
 const _get = require('lodash/get')
 
-const translateObject = (src, from) => {
+function translateObject(src, from) {
   let key, elem, to = {}
   for (key in from) {
     elem = from[key]
@@ -16,7 +17,7 @@ const translateObject = (src, from) => {
   return to
 }
 
-const translateValue = (src, from) => {
+function translateValue(src, from) {
   if (typeof from === 'function') {
     let val = _get(src, from._path)
     return from(val, src)
@@ -25,7 +26,7 @@ const translateValue = (src, from) => {
   }
 }
 
-const translateArray = (src, from) => {
+function translateArray(src, from) {
   let i, elem, to = {}
   for (i = from.length - 1; i >= 0; i--) {
     elem = from[i]
@@ -39,7 +40,7 @@ const translateArray = (src, from) => {
   return to
 }
 
-const getMiddleware = (any, key, isRes) => {
+function getSelector(any, key, isRes) {
   if (Array.isArray(any))
     return (req, res) => translateArray((isRes ? res : req)[key], any)
   else if (typeof any === 'object')
@@ -48,15 +49,20 @@ const getMiddleware = (any, key, isRes) => {
     return (req, res) => translateValue((isRes ? res : req)[key], any)
 }
 
-exports.body = any => getMiddleware(any, 'body')
+function setKind(mw) {
+  mw._kind = enums.SELECTOR
+  return mw
+}
 
-exports.query = any => getMiddleware(any, 'query')
+exports.body = any => setKind(getSelector(any, 'body'))
 
-exports.params = any => getMiddleware(any, 'params')
+exports.query = any => setKind(getSelector(any, 'query'))
 
-exports.locals = any => getMiddleware(any, 'locals', true)
+exports.params = any => setKind(getSelector(any, 'params'))
 
-exports.raw = any => () => any
+exports.locals = any => setKind(getSelector(any, 'locals', true))
+
+exports.raw = any => setKind(() => any)
 
 exports.derive = (path, key, fn) => {
   if (typeof key === 'function') {
