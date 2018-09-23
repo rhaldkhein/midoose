@@ -1,6 +1,7 @@
 const sinon = require('sinon')
 const _isMatch = require('lodash/isMatch')
-const mustExist = require('../../src/middlewares/mustExist')
+const mustExist = require('../../../src/middlewares/mustExist')
+const { body } = require('../../../src/selector')
 
 describe('mustExist', () => {
 
@@ -47,7 +48,7 @@ describe('mustExist', () => {
     }
     mustExist(
       Model.User,
-      { _id: 'body.id' }
+      body({ _id: 'id' })
     )(req, res, next)
   })
 
@@ -85,7 +86,7 @@ describe('mustExist', () => {
     const next = () => null
     mustExist(
       Model.User,
-      { _id: 'body.id' },
+      body({ _id: 'id' }),
       {
         end: true // Default
       }
@@ -108,7 +109,7 @@ describe('mustExist', () => {
     }
     mustExist(
       Model.User,
-      { _id: 'body.id' },
+      body({ _id: 'id' }),
       {
         end: false
       }
@@ -131,7 +132,7 @@ describe('mustExist', () => {
     }
     mustExist(
       Model.User,
-      { _id: 'body.id' },
+      body({ _id: 'id' }),
       {
         document: true,
         key: 'customResult'

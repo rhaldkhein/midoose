@@ -1,6 +1,7 @@
 const sinon = require('sinon')
 const _isMatch = require('lodash/isMatch')
-const mustNotExist = require('../../src/middlewares/mustNotExist')
+const mustNotExist = require('../../../src/middlewares/mustNotExist')
+const { body } = require('../../../src/selector')
 
 describe('mustNotExist', () => {
 
@@ -47,7 +48,7 @@ describe('mustNotExist', () => {
     }
     mustNotExist(
       Model.User,
-      { _id: 'body.id' }
+      body({ _id: 'id' })
     )(req, res, next)
   })
 
@@ -85,7 +86,7 @@ describe('mustNotExist', () => {
     const next = () => null
     mustNotExist(
       Model.User,
-      { _id: 'body.id' },
+      body({ _id: 'id' }),
       {
         end: true // Default
       }
@@ -108,7 +109,7 @@ describe('mustNotExist', () => {
     }
     mustNotExist(
       Model.User,
-      { _id: 'body.id' },
+      body({ _id: 'id' }),
       {
         end: false
       }
@@ -131,7 +132,7 @@ describe('mustNotExist', () => {
     }
     mustNotExist(
       Model.User,
-      { _id: 'body.id' },
+      body({ _id: 'id' }),
       {
         end: false,
         key: 'customResult'
@@ -155,7 +156,7 @@ describe('mustNotExist', () => {
     }
     mustNotExist(
       Model.User,
-      { _id: 'body.id' },
+      body({ _id: 'id' }),
       {
         end: false, // This is required to return the document
         document: true
@@ -179,7 +180,7 @@ describe('mustNotExist', () => {
     }
     mustNotExist(
       Model.User,
-      { _id: 'body.id' },
+      body({ _id: 'id' }),
       {
         end: false, // This is required to return the document
         document: true

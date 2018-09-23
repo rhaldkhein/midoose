@@ -1,5 +1,6 @@
 const sinon = require('sinon')
-const mustExistById = require('../../src/middlewares/mustExistById')
+const mustExistById = require('../../../src/middlewares/mustExistById')
+const { body } = require('../../../src/selector')
 
 describe('mustExistById', () => {
 
@@ -79,10 +80,10 @@ describe('mustExistById', () => {
         done(error)
       }
     })
-    const next = () => null
+    const next = () => null // 00090000019062
     mustExistById(
       Model.User,
-      'body.id',
+      body('id'),
       {
         end: true // Default
       }
@@ -105,7 +106,7 @@ describe('mustExistById', () => {
     }
     mustExistById(
       Model.User,
-      'body.id',
+      body('id'),
       {
         end: false
       }
@@ -128,7 +129,7 @@ describe('mustExistById', () => {
     }
     mustExistById(
       Model.User,
-      'body.id',
+      body('id'),
       {
         document: true,
         key: 'customResult'

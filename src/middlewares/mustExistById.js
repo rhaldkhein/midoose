@@ -1,12 +1,10 @@
 'use strict'
 
-const _get = require('lodash/get')
 const _defaults = require('lodash/defaults')
-const {
-  handlers: { error }
-} = require('..')
+const { body } = require('../selector')
+const { handlers: { error } } = require('..')
 
-module.exports = (model, id = 'body.id', opt = {}) => {
+module.exports = (model, id = body('id'), opt = {}) => {
 
   _defaults(opt, {
     end: true,
@@ -14,14 +12,10 @@ module.exports = (model, id = 'body.id', opt = {}) => {
     document: false
   })
 
-  let isFunc = typeof id === 'function'
-
   return (req, res, next) => {
     model.findById(
       // Auto resolve id
-      (isFunc && id(req, res)) ||
-      _get(req, id) ||
-      _get(res, id),
+      id(req, res),
       // Return all fields if document is true
       !opt.document && '+_id',
       // Options for model query

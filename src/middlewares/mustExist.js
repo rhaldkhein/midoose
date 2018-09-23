@@ -1,12 +1,9 @@
 'use strict'
 
 const _defaults = require('lodash/defaults')
-const {
-  handlers: { error },
-  evalProps
-} = require('..')
+const { handlers: { error } } = require('..')
 
-module.exports = (model, cond, opt = {}) => {
+module.exports = (model, condSelector, opt = {}) => {
 
   _defaults(opt, {
     end: true,
@@ -14,12 +11,10 @@ module.exports = (model, cond, opt = {}) => {
     document: false
   })
 
-  let isFunc = typeof cond === 'function'
-
   return (req, res, next) => {
     model.findOne(
       // Auto resolve condition
-      isFunc ? cond(req, res) : evalProps(cond, req, res),
+      condSelector(req, res),
       // Return all fields if document is true
       !opt.document && '+_id',
       // Options for model query
