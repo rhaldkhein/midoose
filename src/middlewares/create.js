@@ -1,6 +1,6 @@
 'use strict'
 
-const _defaults = require('lodash/defaults')
+const _defaults = require('lodash.defaults')
 const { handlers: { done, error } } = require('..')
 
 module.exports = (model, docsSelector, opt = {}) => {

@@ -18,9 +18,11 @@
   "homepage": "https://github.com/rhaldkhein/midoose#readme",
   "dependencies": {
     "async.parallel": "^0.5.2",
-    "body-parser": "^1.18.3"
+    "lodash.defaults": "^4.2.0",
+    "lodash.get": "^4.4.2"
   },
   "devDependencies": {
+    "body-parser": "^1.18.3",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "eslint": "^5.5.0",

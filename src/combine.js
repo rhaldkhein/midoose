@@ -1,7 +1,7 @@
 'use strict'
 
 const parallel = require('async.parallel')
-const _defaults = require('lodash/defaults')
+const _defaults = require('lodash.defaults')
 const { enums } = require('.')
 
 /**

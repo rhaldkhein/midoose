@@ -1,6 +1,6 @@
 'use strict'
 
-const _defaults = require('lodash/defaults')
+const _defaults = require('lodash.defaults')
 const update = require('./update')
 
 module.exports = (model, condSelector, docSelector, opt = {}) => {

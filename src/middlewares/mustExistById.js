@@ -1,6 +1,6 @@
 'use strict'
 
-const _defaults = require('lodash/defaults')
+const _defaults = require('lodash.defaults')
 const { body } = require('../selector')
 const { handlers: { error } } = require('..')
 

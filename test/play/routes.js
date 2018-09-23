@@ -3,7 +3,7 @@
 const update = require('../../src/middlewares/update')
 const updateById = require('../../src/middlewares/updateById')
 const updateOne = require('../../src/middlewares/updateOne')
-const { body } = require('../../src')
+const { body } = require('../../src/selector')
 
 module.exports = app => {
 
@@ -33,6 +33,10 @@ module.exports = app => {
     )
   )
 
+  app.use(function (err, req, res, next) {
+    // console.error(err.stack)
+    res.status(500).send('Something broke!')
+  })
 
 }
 
