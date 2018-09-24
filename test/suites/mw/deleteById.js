@@ -29,7 +29,7 @@ describe('deleteById', () => {
     stub.restore()
   })
 
-  it('should delete by id from body (default)', done => {
+  it('should delete by id from body', done => {
 
     const res = mockRes(payload => {
       try {
@@ -42,7 +42,8 @@ describe('deleteById', () => {
     })
 
     deleteById(
-      Model.User
+      Model.User,
+      body('id')
     )(req, res)
 
   })
@@ -140,38 +141,40 @@ describe('deleteById', () => {
 
   it('should require query options', done => {
     const req = {}
-    const res = mockRes(payload => {
+    const next = err => {
       try {
         // This is a fake Error. A hack to check that options is 
         // required for model query.
-        expect(payload).to.be.instanceOf(Error)
+        expect(err).to.be.instanceOf(Error)
           .with.property('message', 'ok options')
         done()
       } catch (error) {
         done(error)
       }
-    })
+    }
+    const res = {}
     deleteById(
       Model.User,
       () => 'options'
-    )(req, res)
+    )(req, res, next)
   })
 
   it('should catch on error', done => {
-    const res = mockRes(payload => {
+    const next = err => {
       try {
-        expect(payload).to.be.instanceOf(Error)
+        expect(err).to.be.instanceOf(Error)
           .with.property('message', 'sample error')
         done()
       } catch (error) {
         done(error)
       }
-    })
+    }
+    const res = {}
     deleteById(
       Model.User,
       // Force sinon to reject a promise through stub
       () => 'error'
-    )(req, res)
+    )(req, res, next)
   })
 
 })

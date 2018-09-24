@@ -198,23 +198,25 @@ describe('create', () => {
     stubCreate.withArgs(sinon.match.any, sinon.match.any).rejects(new Error('ok options'))
     stubCreate.resolves()
 
-    const res = mockRes(payload => {
+    const next = err => {
       try {
         // This is a fake Error. A hack to check that options is 
         // required for model query.
-        expect(payload).to.be.instanceOf(Error)
+        expect(err).to.be.instanceOf(Error)
           .with.property('message', 'ok options')
         done()
       } catch (error) {
         done(error)
       }
       stubCreate.restore()
-    })
+    }
+
+    const res = {}
 
     create(
       Model.User,
       body('dummy')
-    )(req, res)
+    )(req, res, next)
 
   })
 
@@ -223,21 +225,23 @@ describe('create', () => {
     const stubCreate = sinon.stub(Model.User, 'create')
       .rejects(new Error('sample error'))
 
-    const res = mockRes(payload => {
+    const next = err => {
       try {
-        expect(payload).to.be.instanceOf(Error)
+        expect(err).to.be.instanceOf(Error)
           .with.property('message', 'sample error')
         done()
       } catch (error) {
         done(error)
       }
       stubCreate.restore()
-    })
+    }
+
+    const res = {}
 
     create(
       Model.User,
       body('dummy')
-    )(req, res)
+    )(req, res, next)
 
   })
 

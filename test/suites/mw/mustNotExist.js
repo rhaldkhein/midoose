@@ -74,16 +74,16 @@ describe('mustNotExist', () => {
 
   it('should exit on found document if `end` is true', done => {
     const req = { body: { id: '103' } }
-    const res = mockRes(payload => {
+    const res = {}
+    const next = err => {
       try {
-        expect(payload).to.be.instanceOf(Error)
+        expect(err).to.be.instanceOf(Error)
           .with.property('message', 'document must not exist')
         done()
       } catch (error) {
         done(error)
       }
-    })
-    const next = () => null
+    }
     mustNotExist(
       Model.User,
       body({ _id: 'id' }),
@@ -190,38 +190,40 @@ describe('mustNotExist', () => {
 
   it('should require query options', done => {
     const req = {}
-    const res = mockRes(payload => {
+    const res = {}
+    const next = err => {
       try {
         // This is a fake Error. A hack to check that options is 
         // required for model query.
-        expect(payload).to.be.instanceOf(Error)
+        expect(err).to.be.instanceOf(Error)
           .with.property('message', 'ok options')
         done()
       } catch (error) {
         done(error)
       }
-    })
+    }
     mustNotExist(
       Model.User,
       () => 'options'
-    )(req, res)
+    )(req, res, next)
   })
 
   it('should catch on error', done => {
     const req = {}
-    const res = mockRes(payload => {
+    const res = {}
+    const next = err => {
       try {
-        expect(payload).to.be.instanceOf(Error)
+        expect(err).to.be.instanceOf(Error)
           .with.property('message', 'sample error')
         done()
       } catch (error) {
         done(error)
       }
-    })
+    }
     mustNotExist(
       Model.User,
       () => 'error'
-    )(req, res)
+    )(req, res, next)
   })
 
 })

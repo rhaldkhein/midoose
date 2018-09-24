@@ -1,8 +1,7 @@
 'use strict'
 
 const _defaults = require('lodash.defaults')
-const { body } = require('../selector')
-const { handlers: { done, error } } = require('..')
+const { __CONFIG__: { done, end, key } } = require('..')
 
 /**
  * Creates a findById middleware. 
@@ -42,14 +41,12 @@ const { handlers: { done, error } } = require('..')
  *  options {Object}  - Mongoose `options` argument for `findById`
  * 
  */
-module.exports = (model, idSelector = body('id'), opt = {}) => {
+module.exports = (model, idSelector, opt = {}) => {
 
-  _defaults(opt, {
-    end: true,
-    key: 'result'
-  })
+  _defaults(opt, { end, key })
 
-  return (req, res, next) => {
+  let midware = (req, res, next) => {
+    let opt = midware._opt
     model.findById(
       idSelector(req, res),
       opt.select,
@@ -67,7 +64,9 @@ module.exports = (model, idSelector = body('id'), opt = {}) => {
         next(opt.next)
         return null
       })
-      .catch(err => error(res, err))
+      .catch(next)
   }
 
+  midware._opt = opt
+  return midware
 }

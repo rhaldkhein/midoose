@@ -30,7 +30,7 @@ describe('mustExistById', () => {
     stubUserFindOne.restore()
   })
 
-  it('should result to true (default)', done => {
+  it('should result to true', done => {
     const req = { body: { id: '103' } }
     const resJsonEnd = sinon.spy()
     const res = mockRes(resJsonEnd)
@@ -45,7 +45,8 @@ describe('mustExistById', () => {
       }
     }
     mustExistById(
-      Model.User
+      Model.User,
+      body('id')
     )(req, res, next)
   })
 
@@ -71,16 +72,16 @@ describe('mustExistById', () => {
 
   it('should exit on no document and `end` is true', done => {
     const req = { body: { id: 'no_id' } }
-    const res = mockRes(payload => {
+    const res = {}
+    const next = err => {
       try {
-        expect(payload).to.be.instanceOf(Error)
+        expect(err).to.be.instanceOf(Error)
           .with.property('message', 'document must exist')
         done()
       } catch (error) {
         done(error)
       }
-    })
-    const next = () => null // 00090000019062
+    }
     mustExistById(
       Model.User,
       body('id'),
@@ -139,38 +140,40 @@ describe('mustExistById', () => {
 
   it('should require query options', done => {
     const req = {}
-    const res = mockRes(payload => {
+    const res = {}
+    const next = err => {
       try {
         // This is a fake Error. A hack to check that options is 
         // required for model query.
-        expect(payload).to.be.instanceOf(Error)
+        expect(err).to.be.instanceOf(Error)
           .with.property('message', 'ok options')
         done()
       } catch (error) {
         done(error)
       }
-    })
+    }
     mustExistById(
       Model.User,
       () => 'options'
-    )(req, res)
+    )(req, res, next)
   })
 
   it('should catch on error', done => {
     const req = {}
-    const res = mockRes(payload => {
+    const res = {}
+    const next = err => {
       try {
-        expect(payload).to.be.instanceOf(Error)
+        expect(err).to.be.instanceOf(Error)
           .with.property('message', 'sample error')
         done()
       } catch (error) {
         done(error)
       }
-    })
+    }
     mustExistById(
       Model.User,
       () => 'error'
-    )(req, res)
+    )(req, res, next)
   })
 
 })

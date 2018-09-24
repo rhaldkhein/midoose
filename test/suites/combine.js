@@ -130,8 +130,8 @@ describe('combine', () => {
     }
 
     let middlewares = combine(
-      find(Model.User, body(['active']), { end: false, key: 'resultA' }),
-      find(Model.Post, body(['published']), { end: false, key: 'resultB' })
+      find(Model.User, body(['active']), { key: 'resultA' }),
+      find(Model.Post, body(['published']), { key: 'resultB' })
     )
 
     middlewares(req, res, next)

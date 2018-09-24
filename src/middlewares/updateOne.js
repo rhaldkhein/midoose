@@ -1,18 +1,15 @@
 'use strict'
 
 const _defaults = require('lodash.defaults')
-const { handlers: { done } } = require('..')
+const { __CONFIG__: { done, end, key } } = require('..')
 
 module.exports = (model, condSelector, docSelector, opt = {}) => {
 
-  _defaults(opt, {
-    end: true,
-    key: 'result'
-  })
+  _defaults(opt, { end, key })
 
-  return (req, res, next) => {
+  let midware = (req, res, next) => {
     // Get data be placed
-    let docNew = docSelector(req, res)
+    let opt = midware._opt, docNew = docSelector(req, res)
     // Add more data to docs through options object
     if (opt.moreDoc) docNew = opt.moreDoc(docNew, req, res)
     // throw new Error('Test')
@@ -35,7 +32,8 @@ module.exports = (model, condSelector, docSelector, opt = {}) => {
         return null
       })
       .catch(next)
-
   }
 
+  midware._opt = opt
+  return midware
 }

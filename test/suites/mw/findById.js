@@ -54,7 +54,7 @@ describe('findById', () => {
     stubPostPopulate.restore()
   })
 
-  it('should find by id from body (default)', done => {
+  it('should find by id from body', done => {
 
     const req = { body: { id: '103' } }
 
@@ -69,7 +69,8 @@ describe('findById', () => {
     })
 
     findById(
-      Model.User
+      Model.User,
+      body('id')
     )(req, res)
 
   })
@@ -215,60 +216,63 @@ describe('findById', () => {
 
   it('should require query options', done => {
     const req = {}
-    const res = mockRes(payload => {
+    const next = err => {
       try {
         // This is a fake Error. A hack to check that options is 
         // required for model query.
         // If error is `document not found`. That means that `options`
         // is missing and should be fixed.
-        expect(payload).to.be.instanceOf(Error)
+        expect(err).to.be.instanceOf(Error)
           .with.property('message', 'ok options')
         done()
       } catch (error) {
         done(error)
       }
-    })
+    }
+    const res = {}
     findById(
       Model.User,
       () => 'options'
-    )(req, res)
+    )(req, res, next)
   })
 
   it('should catch on error', done => {
     const req = {}
-    const res = mockRes(payload => {
+    const next = err => {
       try {
-        expect(payload).to.be.instanceOf(Error)
+        expect(err).to.be.instanceOf(Error)
           .with.property('message', 'sample error')
         done()
       } catch (error) {
         done(error)
       }
-    })
+    }
+    const res = {}
     findById(
       Model.User,
       () => 'error'
-    )(req, res)
+    )(req, res, next)
   })
 
   it('should catch for no document if `end` is true', done => {
     const req = { body: { id: 'no_id' } }
-    const res = mockRes(payload => {
+    const next = err => {
       try {
-        expect(payload).to.be.instanceOf(Error)
+        expect(err).to.be.instanceOf(Error)
           .with.property('message', 'document not found')
         done()
       } catch (error) {
         done(error)
       }
-    })
+    }
+    const res = {}
     findById(
       Model.User,
       body('id'),
       {
         end: true
       }
-    )(req, res)
+    )(req, res, next)
   })
 
 })

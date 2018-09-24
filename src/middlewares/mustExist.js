@@ -1,17 +1,18 @@
 'use strict'
 
 const _defaults = require('lodash.defaults')
-const { handlers: { error } } = require('..')
+const { __CONFIG__: { end, key } } = require('..')
 
 module.exports = (model, condSelector, opt = {}) => {
 
   _defaults(opt, {
-    end: true,
-    key: 'result',
+    end: end,
+    key: key,
     document: false
   })
 
-  return (req, res, next) => {
+  let midware = (req, res, next) => {
+    let opt = midware._opt
     model.findOne(
       // Auto resolve condition
       condSelector(req, res),
@@ -25,7 +26,9 @@ module.exports = (model, condSelector, opt = {}) => {
         next(opt.next)
         return null
       })
-      .catch(err => error(res, err))
+      .catch(next)
   }
 
+  midware._opt = opt
+  return midware
 }

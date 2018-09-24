@@ -1,18 +1,18 @@
 'use strict'
 
 const _defaults = require('lodash.defaults')
-const { body } = require('../selector')
-const { handlers: { error } } = require('..')
+const { __CONFIG__: { end, key } } = require('..')
 
-module.exports = (model, id = body('id'), opt = {}) => {
+module.exports = (model, id, opt = {}) => {
 
   _defaults(opt, {
-    end: true,
-    key: 'result',
+    end: end,
+    key: key,
     document: false
   })
 
-  return (req, res, next) => {
+  let midware = (req, res, next) => {
+    let opt = midware._opt
     model.findById(
       // Auto resolve id
       id(req, res),
@@ -26,7 +26,9 @@ module.exports = (model, id = body('id'), opt = {}) => {
         next(opt.next)
         return null
       })
-      .catch(err => error(res, err))
+      .catch(next)
   }
 
+  midware._opt = opt
+  return midware
 }
