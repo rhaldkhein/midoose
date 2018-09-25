@@ -1,14 +1,17 @@
-const { query, params, locals } = require('../../../src/selector')
+const { query, params, locals,
+  req: selReq, res: selRes } = require('../../../src/selector')
 
 describe('selector for other sources', () => {
 
   const req = {
     query: { name: 'Foo' },
-    params: { name: 'Bar' }
+    params: { name: 'Bar' },
+    user: 'Baz'
   }
 
   const res = {
-    locals: { name: 'Zap' }
+    locals: { name: 'Zap' },
+    kind: 'Fol'
   }
 
   it('should select from query', () => {
@@ -41,6 +44,28 @@ describe('selector for other sources', () => {
     data = selector(req, res)
 
     expect(data).to.be.equal('Zap')
+
+  })
+
+  it('should select from req object', () => {
+
+    let selector, data
+
+    selector = selReq('user')
+    data = selector(req, res)
+
+    expect(data).to.be.equal('Baz')
+
+  })
+
+  it('should select from res object', () => {
+
+    let selector, data
+
+    selector = selRes('kind')
+    data = selector(req, res)
+
+    expect(data).to.be.equal('Fol')
 
   })
 

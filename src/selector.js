@@ -49,6 +49,15 @@ function getSelector(any, key, isRes) {
     return (req, res) => translateValue((isRes ? res : req)[key], any)
 }
 
+function getSelectorBase(any, isRes) {
+  if (Array.isArray(any))
+    return (req, res) => translateArray((isRes ? res : req), any)
+  else if (typeof any === 'object')
+    return (req, res) => translateObject((isRes ? res : req), any)
+  else
+    return (req, res) => translateValue((isRes ? res : req), any)
+}
+
 function setKind(mw) {
   mw._kind = enums.SELECTOR
   return mw
@@ -63,6 +72,10 @@ exports.params = any => setKind(getSelector(any, 'params'))
 exports.locals = any => setKind(getSelector(any, 'locals', true))
 
 exports.raw = any => setKind(() => any)
+
+exports.req = any => setKind(getSelectorBase(any))
+
+exports.res = any => setKind(getSelectorBase(any, true))
 
 exports.derive = (path, key, fn) => {
   if (typeof key === 'function') {

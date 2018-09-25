@@ -2,8 +2,9 @@ const sinon = require('sinon')
 const _find = require('lodash/find')
 const _filter = require('lodash/filter')
 const find = require('../../src/middlewares/find')
-const { body, query, params, locals } = require('../../src/selector')
 const combine = require('../../src/combine')
+const { body, query, params, locals,
+  req: selReq, res: selRes } = require('../../src/selector')
 
 describe('combine', () => {
 
@@ -75,27 +76,33 @@ describe('combine', () => {
     const req = {
       body: { name: 'Foo' },
       query: { age: 21 },
-      params: { active: true }
+      params: { active: true },
+      user: { name: 'Bar' }
     }
 
     const res = {
-      locals: { surname: 'Jar' }
+      locals: { surname: 'Jar' },
+      kind: { name: 'Zip' }
     }
 
-    let selectors = combine(
+    const selectors = combine(
       body(['name']),
       query(['age']),
       params(['active']),
-      locals(['surname'])
+      locals(['surname']),
+      selReq({ user: 'user.name' }),
+      selRes({ kind: 'kind.name' })
     )
 
-    let result = selectors(req, res)
+    const result = selectors(req, res)
 
     expect(result).to.be.a('object')
     expect(result).to.have.property('name').and.to.equal('Foo')
     expect(result).to.have.property('age').and.to.equal(21)
     expect(result).to.have.property('active').and.to.equal(true)
     expect(result).to.have.property('surname').and.to.equal('Jar')
+    expect(result).to.have.property('user').and.to.equal('Bar')
+    expect(result).to.have.property('kind').and.to.equal('Zip')
 
   })
 
@@ -167,7 +174,7 @@ describe('combine', () => {
       }
     }
 
-    let middlewares = combine(
+    const middlewares = combine(
       find(Model.User, body(['active'])),
       find(Model.Post, body(['published']), { key: 'resultB' }),
       { end: false, key: 'customResult' }
