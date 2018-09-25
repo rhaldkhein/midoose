@@ -99,7 +99,42 @@ describe('combine', () => {
 
   })
 
-  it('should combine middlewares', (done) => {
+  it('should combine middlewares and end by default', (done) => {
+
+    const req = {
+      body: {
+        active: true,
+        published: false
+      },
+      query: {
+        country: 'US'
+      }
+    }
+
+    const res = mockRes(payload => {
+      try {
+        expect(payload).to.have.property('0')
+        expect(payload).to.have.property('1')
+        expect(payload[0]).to.be.a('array')
+        expect(payload[1]).to.be.a('array')
+        expect(payload[0][1]._id).to.be.equal('103')
+        expect(payload[1][2]._id).to.be.equal('207')
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+
+    let middlewares = combine(
+      find(Model.User, body(['active'])),
+      find(Model.Post, body(['published']))
+    )
+
+    middlewares(req, res, () => null)
+
+  })
+
+  it('should combine middlewares and DO NOT end with custom result key', (done) => {
 
     const req = {
       body: {
@@ -117,12 +152,15 @@ describe('combine', () => {
     const next = () => {
       try {
         expect(resJsonEnd).to.have.not.been.called
-        expect(res.locals).to.be.property('resultA')
-        expect(res.locals.resultA).to.be.a('array')
-        expect(res.locals.resultA[1]._id).to.be.equal('103')
-        expect(res.locals).to.be.property('resultB')
-        expect(res.locals.resultB).to.be.a('array')
-        expect(res.locals.resultB[2]._id).to.be.equal('207')
+        expect(res.locals).to.have.property('customResult')
+          .and.to.be.a('object')
+        expect(res.locals.customResult[0]).to.be.a('array')
+        expect(res.locals.customResult[0][1]._id).to.be.equal('103')
+        expect(res.locals).to.not.have.property('resultB')
+        expect(res.locals.customResult).to.have.property('resultB')
+          .and.to.be.a('array')
+        expect(res.locals.customResult.resultB[2]._id)
+          .to.be.equal('207')
         done()
       } catch (error) {
         done(error)
@@ -130,8 +168,9 @@ describe('combine', () => {
     }
 
     let middlewares = combine(
-      find(Model.User, body(['active']), { key: 'resultA' }),
-      find(Model.Post, body(['published']), { key: 'resultB' })
+      find(Model.User, body(['active'])),
+      find(Model.Post, body(['published']), { key: 'resultB' }),
+      { end: false, key: 'customResult' }
     )
 
     middlewares(req, res, next)

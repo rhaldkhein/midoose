@@ -61,7 +61,8 @@ module.exports = (model, condSelector, opt = {}) => {
       .then(docs => opt.map ? docs.map(opt.map) : docs)
       .then(docs => {
         if (opt.end) return done(res, docs)
-        else res.locals[opt.key] = docs
+        if (opt.pass) return next(null, docs)
+        res.locals[opt.key] = docs
         next(opt.next)
         return null
       })

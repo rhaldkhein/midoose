@@ -60,7 +60,8 @@ module.exports = (model, idSelector, opt = {}) => {
       })
       .then(doc => {
         if (opt.end) return done(res, doc)
-        else res.locals[opt.key] = doc
+        if (opt.pass) return next(null, doc)
+        res.locals[opt.key] = doc
         next(opt.next)
         return null
       })

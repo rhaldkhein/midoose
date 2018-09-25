@@ -19,7 +19,9 @@
   "dependencies": {
     "async.parallel": "^0.5.2",
     "lodash.defaults": "^4.2.0",
-    "lodash.get": "^4.4.2"
+    "lodash.get": "^4.4.2",
+    "lodash.mapvalues": "^4.6.0",
+    "lodash.reduce": "^4.6.0"
   },
   "devDependencies": {
     "body-parser": "^1.18.3",

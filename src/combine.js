@@ -2,6 +2,8 @@
 
 const parallel = require('async.parallel')
 const _defaults = require('lodash.defaults')
+const _reduce = require('lodash.reduce')
+const _mapValues = require('lodash.mapvalues')
 const { enums, __CONFIG__: { done, end, key } } = require('.')
 
 /**
@@ -10,15 +12,27 @@ const { enums, __CONFIG__: { done, end, key } } = require('.')
 
 function combineMiddlewares(mids, opt = {}) {
   _defaults(opt, { end, key })
-  mids.forEach((item, i) => {
-    // item._opt = { end: false, key: '_result' + i }
-    item._opt.end = false
-  })
+
+  mids = _reduce(mids, function (obj, mid, i) {
+    // Do not end. Let the combine middleware end it.
+    mid._opt.end = false
+    // Pass the result to next callback.
+    // Do not change to false, will not work.
+    mid._opt.pass = true
+    // Add key. If key is default, then assume its omitted
+    // and set index instead
+    obj[mid._opt.key === key ? i : mid._opt.key] = mid
+    return obj
+  }, {})
+
   return (req, res, next) => {
     parallel(
-      mids.map(item => cb => item(req, res, () => cb())),
-      (err) => {
-        next(err || opt.next)
+      _mapValues(mids, item => callback => item(req, res, callback)),
+      (err, results) => {
+        if (err) return next(err)
+        if (opt.end) return done(res, results)
+        res.locals[opt.key] = results
+        next(opt.next)
       }
     )
   }
@@ -38,13 +52,13 @@ function combineSelectors(sels) {
 }
 
 module.exports = (...rest) => {
-  if (rest[0]._kind === enums.SELECTOR)
-    return combineSelectors(
-      rest,
-      typeof rest[rest.length - 1] !== 'function' && rest.pop()
-    )
-  else
-    return combineMiddlewares(
-      rest
-    )
+  if (rest[0]._kind === enums.SELECTOR) {
+    return combineSelectors(rest)
+  } else {
+    if (typeof rest[rest.length - 1] !== 'function') {
+      return combineMiddlewares(rest, rest.pop())
+    } else {
+      return combineMiddlewares(rest)
+    }
+  }
 }

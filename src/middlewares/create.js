@@ -23,7 +23,10 @@ module.exports = (model, docsSelector, opt = {}) => {
       })
       .then(documents => {
         if (opt.end) return done(res, documents)
-        else res.locals[opt.key] = documents
+        // If `opt.pass` is true, the `next` is a callback 
+        // like `callback(err, payload)` and not Express next
+        if (opt.pass) return next(null, documents)
+        res.locals[opt.key] = documents
         next(opt.next)
         return null
       })

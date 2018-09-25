@@ -26,7 +26,8 @@ module.exports = (model, cond, fields, opt = {}) => {
       })
       .then(documents => {
         if (opt.end) return done(res, documents)
-        else res.locals[opt.key] = documents
+        if (opt.pass) return next(null, documents)
+        res.locals[opt.key] = documents
         next(opt.next)
         return null
       })
