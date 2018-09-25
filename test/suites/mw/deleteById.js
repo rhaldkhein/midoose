@@ -1,3 +1,5 @@
+'use strict'
+
 const sinon = require('sinon')
 const deleteById = require('../../../src/middlewares/deleteById')
 const { body, query } = require('../../../src/selector')

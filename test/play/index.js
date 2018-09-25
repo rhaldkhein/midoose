@@ -32,10 +32,10 @@ mongoose.connect(
       .then(() => Model.User.deleteMany({}).exec())
       .then(() => Model.Post.deleteMany({}).exec())
       .then(() => Model.User.create([
-        { name: 'FooUser', country: 'US', age: 1, active: true },
-        { name: 'BarUser', country: 'AE', age: 2, active: false },
-        { name: 'BazUser', country: 'US', age: 2, active: true },
-        { name: 'ZapUser', country: 'AE', age: 3, active: false }
+        { email: 'foo@gmail.com', password: '123', name: 'FooUser', country: 'US', age: 1, active: true },
+        { email: 'bar@gmail.com', password: '123', name: 'BarUser', country: 'AE', age: 2, active: false },
+        { email: 'baz@gmail.com', password: '123', name: 'BazUser', country: 'US', age: 2, active: true },
+        { email: 'zap@gmail.com', password: '123', name: 'ZapUser', country: 'AE', age: 3, active: false }
       ]))
       .then(users => Model.Post.create([
         { user: users[0]._id, title: 'FooPost', published: true },

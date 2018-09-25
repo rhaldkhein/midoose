@@ -1,3 +1,5 @@
+'use strict'
+
 const sinon = require('sinon')
 const mustExistById = require('../../../src/middlewares/mustExistById')
 const { body } = require('../../../src/selector')

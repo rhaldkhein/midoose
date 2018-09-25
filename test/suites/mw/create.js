@@ -1,3 +1,5 @@
+'use strict'
+
 const sinon = require('sinon')
 const shortid = require('shortid')
 const create = require('../../../src/middlewares/create')

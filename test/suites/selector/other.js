@@ -1,3 +1,5 @@
+'use strict'
+
 const { query, params, locals,
   req: selReq, res: selRes } = require('../../../src/selector')
 

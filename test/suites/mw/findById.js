@@ -1,3 +1,5 @@
+'use strict'
+
 const sinon = require('sinon')
 const _find = require('lodash/find')
 const findById = require('../../../src/middlewares/findById')

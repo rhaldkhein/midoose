@@ -1,5 +1,6 @@
-const { body, derive } = require('../../../src/selector')
+'use strict'
 
+const { body, derive } = require('../../../src/selector')
 
 describe('derive', () => {
 

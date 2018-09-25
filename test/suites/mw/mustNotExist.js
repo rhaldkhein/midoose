@@ -1,3 +1,5 @@
+'use strict'
+
 const sinon = require('sinon')
 const _isMatch = require('lodash/isMatch')
 const mustNotExist = require('../../../src/middlewares/mustNotExist')

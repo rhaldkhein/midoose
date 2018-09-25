@@ -1,3 +1,5 @@
+'use strict'
+
 const { body } = require('../../../src/selector')
 
 describe('selector for body', () => {
