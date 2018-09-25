@@ -18,16 +18,16 @@ module.exports = (model, cond, fields, opt = {}) => {
       cond(req, res),
       docNew,
       opt.options)
-      .then(documents => {
+      .then(raw => {
         if (opt.populate) {
-          return model.populate(documents, opt.populate)
+          return model.populate(raw, opt.populate)
         }
-        return documents
+        return raw
       })
-      .then(documents => {
-        if (opt.end) return done(res, documents)
-        if (opt.pass) return next(null, documents)
-        res.locals[opt.key] = documents
+      .then(raw => {
+        if (opt.end) return done(res, raw)
+        if (opt.pass) return next(null, raw)
+        res.locals[opt.key] = raw
         next(opt.next)
         return null
       })

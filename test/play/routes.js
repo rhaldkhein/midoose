@@ -50,35 +50,29 @@ module.exports = app => {
     }
   )
 
-  app.post('/update',
-    update(Model.Post, body(['published']), body(['title']))
+  app.put('/post/one',
+    updateOne(
+      Model.Post,
+      body({ _id: 'id' }),
+      body(['title', 'published']), // Resolves to { title: req.body.title, ... }
+      {
+        document: true,
+        populate: 'user',
+        options: { new: true }
+      }
+    )
   )
 
-  app.post('/old/update',
+  app.put('/old/post/one',
     (req, res, next) => {
-      Model.Post.updateMany(
-        { published: req.body.published },
-        { title: req.body.title })
+      Model.Post.findOneAndUpdate(
+        { _id: req.body.id },
+        { title: req.body.title, published: req.body.published },
+        { new: true })
         .exec()
         .then(doc => res.json(doc))
         .catch(next)
     }
-  )
-
-  app.post('/update/id',
-    updateById(
-      Model.Post,
-      body('id'), // Resolves to value of `body.id`
-      body(['title', 'published'])
-    )
-  )
-
-  app.post('/update/one',
-    updateOne(
-      Model.Post,
-      body({ _id: 'id' }),
-      body(['title', 'published']) // Resolves to { title: req.body.title, ... }
-    )
   )
 
   app.use(function (err, req, res, next) {

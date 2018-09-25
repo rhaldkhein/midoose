@@ -7,28 +7,30 @@ module.exports = (model, condSelector, docSelector, opt = {}) => {
 
   _defaults(opt, { end, key })
 
+  // Either return the document or the raw object
+  const method = opt.document ? 'findOneAndUpdate' : 'updateOne'
+
   let midware = (req, res, next) => {
     // Get data be placed
     let opt = midware._opt, docNew = docSelector(req, res)
     // Add more data to docs through options object
     if (opt.moreDoc) docNew = opt.moreDoc(docNew, req, res)
-    // throw new Error('Test')
-    // Trigger create
-    model.updateOne(
+    // Trigger update
+    model[method](
       // Criteria to find docs
       condSelector(req, res),
       docNew,
       opt.options)
-      .then(documents => {
-        if (opt.populate) {
-          return model.populate(documents, opt.populate)
+      .then(rawOrDocument => {
+        if (opt.populate && opt.document) {
+          return model.populate(rawOrDocument, opt.populate)
         }
-        return documents
+        return rawOrDocument
       })
-      .then(documents => {
-        if (opt.end) return done(res, documents)
-        if (opt.pass) return next(null, documents)
-        res.locals[opt.key] = documents
+      .then(rawOrDocument => {
+        if (opt.end) return done(res, rawOrDocument)
+        if (opt.pass) return next(null, rawOrDocument)
+        res.locals[opt.key] = rawOrDocument
         next(opt.next)
         return null
       })
