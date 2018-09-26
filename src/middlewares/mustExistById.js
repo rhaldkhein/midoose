@@ -10,6 +10,7 @@ module.exports = (model, id, opt = {}) => {
     key: key,
     document: false
   })
+  let isFuncOptions = typeof opt.options === 'function'
 
   let midware = (req, res, next) => {
     let opt = midware._opt
@@ -19,7 +20,7 @@ module.exports = (model, id, opt = {}) => {
       // Return all fields if document is true
       !opt.document && '+_id',
       // Options for model query
-      opt.options)
+      isFuncOptions ? opt.options(req, res) : opt.options)
       .then(doc => {
         if (!doc && opt.end) throw new Error('document must exist')
         let val = opt.document ? doc : !!doc

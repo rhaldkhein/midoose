@@ -4,14 +4,16 @@
 
 // Connect to DB
 const mongoose = require('mongoose')
-const bodyparser = require('body-parser')
 const express = require('express')
+const bodyparser = require('body-parser')
+const queryparser = require('express-query-int')
 const app = express()
 const port = 3000
 
 require('../models')
 
 app.use(bodyparser.json())
+app.use(queryparser())
 app.use(
   bodyparser.urlencoded({
     extended: true

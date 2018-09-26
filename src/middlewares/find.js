@@ -45,13 +45,14 @@ const { __CONFIG__: { done, end, key } } = require('..')
 module.exports = (model, condSelector, opt = {}) => {
 
   _defaults(opt, { end, key })
+  let isFuncOptions = typeof opt.options === 'function'
 
   let midware = (req, res, next) => {
     let opt = midware._opt
     model.find(
       condSelector(req, res),
       opt.select,
-      opt.options)
+      isFuncOptions ? opt.options(req, res) : opt.options)
       .then(docs => {
         if (opt.populate) {
           return model.populate(docs, opt.populate)

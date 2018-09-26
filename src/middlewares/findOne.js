@@ -6,13 +6,14 @@ const { __CONFIG__: { done, end, key } } = require('..')
 module.exports = (model, condSelector, opt = {}) => {
 
   _defaults(opt, { end, key })
+  let isFuncOptions = typeof opt.options === 'function'
 
   let midware = (req, res, next) => {
     let opt = midware._opt
     model.findOne(
       condSelector(req, res),
       opt.select,
-      opt.options)
+      isFuncOptions ? opt.options(req, res) : opt.options)
       .then(doc => {
         if (!doc && opt.end) throw new Error('document not found')
         if (doc && opt.populate) {

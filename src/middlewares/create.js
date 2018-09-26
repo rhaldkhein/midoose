@@ -6,6 +6,7 @@ const { __CONFIG__: { done, end, key } } = require('..')
 module.exports = (model, docsSelector, opt = {}) => {
 
   _defaults(opt, { end, key })
+  let isFuncOptions = typeof opt.options === 'function'
 
   let midware = (req, res, next) => {
 
@@ -15,7 +16,9 @@ module.exports = (model, docsSelector, opt = {}) => {
     if (opt.moreDocs) docsNew = opt.moreDocs(docsNew, req, res)
 
     // Trigger create
-    model.create(docsNew, opt.options)
+    model.create(
+      docsNew,
+      isFuncOptions ? opt.options(req, res) : opt.options)
       .then(documents => {
         return opt.populate ?
           model.populate(documents, opt.populate) :

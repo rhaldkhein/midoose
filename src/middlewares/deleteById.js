@@ -35,6 +35,7 @@ const { __CONFIG__: { done, end, key } } = require('..')
 module.exports = (model, idSelector, opt = {}) => {
 
   _defaults(opt, { end, key })
+  let isFuncOptions = typeof opt.options === 'function'
 
   let midware = (req, res, next) => {
 
@@ -42,7 +43,7 @@ module.exports = (model, idSelector, opt = {}) => {
 
     model.findByIdAndDelete(
       idSelector(req, res),
-      opt.options)
+      isFuncOptions ? opt.options(req, res) : opt.options)
       .exec()
       .then(doc => {
         if (opt.end) return done(res, doc)

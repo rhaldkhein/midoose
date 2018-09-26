@@ -10,13 +10,14 @@ module.exports = (model, condSelector, opt = {}) => {
     key: key,
     document: false
   })
+  let isFuncOptions = typeof opt.options === 'function'
 
   let midware = (req, res, next) => {
     let opt = midware._opt
     model.findOne(
       condSelector(req, res),
       !opt.document && '+_id',
-      opt.options)
+      isFuncOptions ? opt.options(req, res) : opt.options)
       .then(doc => {
         if (doc && opt.end) throw new Error('document must not exist')
         let val = opt.document ? doc : !doc

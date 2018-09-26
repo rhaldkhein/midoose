@@ -8,7 +8,8 @@ module.exports = (model, condSelector, docSelector, opt = {}) => {
   _defaults(opt, { end, key })
 
   // Either return the document or the raw object
-  const method = opt.document ? 'findOneAndUpdate' : 'updateOne'
+  let method = opt.document ? 'findOneAndUpdate' : 'updateOne'
+  let isFuncOptions = typeof opt.options === 'function'
 
   let midware = (req, res, next) => {
     // Get data be placed
@@ -20,7 +21,7 @@ module.exports = (model, condSelector, docSelector, opt = {}) => {
       // Criteria to find docs
       condSelector(req, res),
       docNew,
-      opt.options)
+      isFuncOptions ? opt.options(req, res) : opt.options)
       .then(rawOrDocument => {
         if (opt.populate && opt.document) {
           return model.populate(rawOrDocument, opt.populate)

@@ -6,6 +6,7 @@ const { __CONFIG__: { done, end, key } } = require('..')
 module.exports = (model, cond, fields, opt = {}) => {
 
   _defaults(opt, { end, key })
+  let isFuncOptions = typeof opt.options === 'function'
 
   let midware = (req, res, next) => {
     // Get data be placed
@@ -17,7 +18,7 @@ module.exports = (model, cond, fields, opt = {}) => {
       // Criteria to find docs
       cond(req, res),
       docNew,
-      opt.options)
+      isFuncOptions ? opt.options(req, res) : opt.options)
       .then(raw => {
         if (opt.populate) {
           return model.populate(raw, opt.populate)

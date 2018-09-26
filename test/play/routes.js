@@ -7,7 +7,8 @@ const updateById = require('../../src/middlewares/updateById')
 const updateOne = require('../../src/middlewares/updateOne')
 const create = require('../../src/middlewares/create')
 const mustNotExist = require('../../src/middlewares/mustNotExist')
-const { body } = require('../../src/selector')
+const find = require('../../src/middlewares/find')
+const { body, query, raw } = require('../../src/selector')
 
 module.exports = app => {
 
@@ -48,6 +49,18 @@ module.exports = app => {
         next(error)
       }
     }
+  )
+
+  app.get('/post',
+    find(
+      Model.Post,
+      // raw({ published: true }),
+      raw({}),
+      {
+        pagination: query(['limit', 'page'])
+        // options: query(['limit', 'skip'])
+      }
+    )
   )
 
   app.put('/post/one',
