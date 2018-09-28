@@ -21,8 +21,7 @@ module.exports = app => {
 
   app.post('/promise/user',
     (req, res, next) => {
-      Model.User.findOne({ email: req.body.email })
-        .exec()
+      Model.User.where({ email: req.body.email }).exists()
         .then(doc => {
           if (doc) throw new Error('already exist')
           return Model.User.create({
@@ -38,7 +37,7 @@ module.exports = app => {
   app.post('/async/user',
     async (req, res, next) => {
       try {
-        let exists = await Model.User.findOne({ email: req.body.email })
+        let exists = await Model.User.where({ email: req.body.email }).exists()
         if (exists) throw new Error('already exist')
         let doc = await Model.User.create({
           email: req.body.email,
@@ -57,8 +56,8 @@ module.exports = app => {
       // raw({ published: true }),
       raw({}),
       {
-        pagination: query(['limit', 'page'])
-        // options: query(['limit', 'skip'])
+        // pagination: query(['limit', 'page'])
+        options: query(['limit', 'skip'])
       }
     )
   )

@@ -19,12 +19,12 @@ describe('deleteById', () => {
 
   before(() => {
     stub = sinon.stub(Model.User, 'findByIdAndDelete')
-    stub.withArgs('error').returns({ exec: () => Promise.reject(new Error('sample error')) })
+    stub.withArgs('error').rejects(new Error('sample error'))
     stub.withArgs('options', sinon.match.any)
-      .returns({ exec: () => Promise.reject(new Error('ok options')) })
-    stub.withArgs('123').returns({ exec: () => Promise.resolve({ _id: '123' }) })
-    stub.withArgs('456').returns({ exec: () => Promise.resolve({ _id: '456' }) })
-    stub.returns({ exec: () => Promise.resolve(null) })
+      .rejects(new Error('ok options'))
+    stub.withArgs('123').resolves({ _id: '123' })
+    stub.withArgs('456').resolves({ _id: '456' })
+    stub.resolves()
   })
 
   after(() => {

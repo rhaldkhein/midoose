@@ -45,7 +45,7 @@ describe('create', () => {
 
     create(
       Model.User,
-      body('dummy') // Dummy only as we're testing create function
+      body('dummy') // Only dummy as we're only testing create middleware
     )(req, res)
 
   })

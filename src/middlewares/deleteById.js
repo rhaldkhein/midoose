@@ -44,7 +44,6 @@ module.exports = (model, idSelector, opt = {}) => {
     model.findByIdAndDelete(
       idSelector(req, res),
       isFuncOptions ? opt.options(req, res) : opt.options)
-      .exec()
       .then(doc => {
         if (opt.end) return done(res, doc)
         if (opt.pass) return next(null, doc)
