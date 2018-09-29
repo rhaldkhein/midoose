@@ -4,7 +4,7 @@
   "description": "Collection of high-level Mongoose utility middlewares for Express",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha"
+    "test": "nyc --reporter=html mocha"
   },
   "repository": {
     "type": "git",
