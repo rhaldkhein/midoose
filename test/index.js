@@ -40,7 +40,12 @@ const posts = [
 ]
 global.samples = { users, posts }
 
-// Get all test suites
+// Pre load all src files to include in test coverage
+glob.sync('./src/**/*.js').forEach(function (file) {
+  require(path.resolve(file))
+})
+
+// Get all test suites and start the tests
 glob.sync('./test/suites/**/*.js').forEach(function (file) {
   require(path.resolve(file))
 })
