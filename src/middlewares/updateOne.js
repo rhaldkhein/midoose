@@ -1,11 +1,11 @@
 'use strict'
 
 const _defaults = require('lodash.defaults')
-const { __CONFIG__: { done, end, key } } = require('..')
+const { config } = require('../config')
 
 module.exports = (model, condSelector, docSelector, opt = {}) => {
 
-  _defaults(opt, { end, key })
+  _defaults(opt, { end: config.end, key: config.key })
 
   // Either return the document or the raw object
   let method = opt.document ? 'findOneAndUpdate' : 'updateOne'
@@ -29,7 +29,7 @@ module.exports = (model, condSelector, docSelector, opt = {}) => {
         return rawOrDocument
       })
       .then(rawOrDocument => {
-        if (opt.end) return done(res, rawOrDocument)
+        if (opt.end) return config.done(res, rawOrDocument)
         if (opt.pass) return next(null, rawOrDocument)
         res.locals[opt.key] = rawOrDocument
         next(opt.next)

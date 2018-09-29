@@ -1,34 +1,40 @@
 'use strict'
 
-const _defaults = require('lodash.defaults')
+const _partial = require('lodash.partial')
+const _mapValues = require('lodash.mapvalues')
+const config = require('./config')
+const selectors = require('./selector')
+const combine = require('./combine')
+const middlewares = require('./middlewares')
 
 /**
- * Enums
+ * Mongoose plugin
  */
 
-exports.enums = {
-  MIDDLEWARE: 1,
-  SELECTOR: 2
-}
+let partialed
 
-/**
- * Default result handlers
- */
-
-
-/**
- * Configuration
- */
-
-exports.__CONFIG__ = {
-  done: (res, payload) => { res.json(payload) },
-  end: true,
-  key: 'result'
-}
-
-exports.config = options => {
-  exports.__CONFIG__ = _defaults(
-    options,
-    exports.__CONFIG__
+function plugin(schema) {
+  schema.static(
+    'midoose',
+    function () {
+      if (!partialed) {
+        partialed = _mapValues(
+          middlewares,
+          value => _partial(value, this)
+        )
+      }
+      return partialed
+    }
   )
 }
+
+/**
+ * Exports
+ */
+
+module.exports = Object.assign(plugin, {
+  ...middlewares,
+  ...selectors,
+  combine,
+  config: config.set
+})

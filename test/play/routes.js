@@ -2,13 +2,25 @@
 
 /* eslint no-unused-vars: "off" */
 
-const update = require('../../src/middlewares/update')
-const updateById = require('../../src/middlewares/updateById')
-const updateOne = require('../../src/middlewares/updateOne')
-const create = require('../../src/middlewares/create')
-const mustNotExist = require('../../src/middlewares/mustNotExist')
-const find = require('../../src/middlewares/find')
-const { body, query, raw } = require('../../src/selector')
+// const update = require('../../src/middlewares/update')
+// const updateById = require('../../src/middlewares/updateById')
+// const updateOne = require('../../src/middlewares/updateOne')
+// const create = require('../../src/middlewares/create')
+// const mustNotExist = require('../../src/middlewares/mustNotExist')
+// const find = require('../../src/middlewares/find')
+// const { body, query, raw } = require('../../src/selector')
+
+const {
+  update,
+  updateById,
+  updateOne,
+  create,
+  mustNotExist,
+  find,
+  body,
+  query,
+  raw
+} = require('../../src')
 
 module.exports = app => {
 
@@ -53,10 +65,8 @@ module.exports = app => {
   app.get('/post',
     find(
       Model.Post,
-      // raw({ published: true }),
       raw({}),
       {
-        // pagination: query(['limit', 'page'])
         options: query(['limit', 'skip'])
       }
     )
@@ -66,7 +76,7 @@ module.exports = app => {
     updateOne(
       Model.Post,
       body({ _id: 'id' }),
-      body(['title', 'published']), // Resolves to { title: req.body.title, ... }
+      body(['title', 'published']),
       {
         document: true,
         populate: 'user',
@@ -81,10 +91,14 @@ module.exports = app => {
         { _id: req.body.id },
         { title: req.body.title, published: req.body.published },
         { new: true })
-        .exec()
+        .then(doc => Model.Post.populate(doc, 'user'))
         .then(doc => res.json(doc))
         .catch(next)
     }
+  )
+
+  app.get('/plugin/post',
+    Model.Post.midoose().find(raw({ published: true }))
   )
 
   app.use(function (err, req, res, next) {
@@ -93,14 +107,3 @@ module.exports = app => {
   })
 
 }
-
-/*
-
-// Returns new object with resolved data
-
-body({
-  // key: <req.body.published>
-  publish: 'published'
-})
-
-*/

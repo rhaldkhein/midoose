@@ -1,11 +1,11 @@
 'use strict'
 
 const _defaults = require('lodash.defaults')
-const { __CONFIG__: { done, end, key } } = require('..')
+const { config } = require('../config')
 
 module.exports = (model, cond, fields, opt = {}) => {
 
-  _defaults(opt, { end, key })
+  _defaults(opt, { end: config.end, key: config.key })
   let isFuncOptions = typeof opt.options === 'function'
 
   let midware = (req, res, next) => {
@@ -26,7 +26,7 @@ module.exports = (model, cond, fields, opt = {}) => {
         return raw
       })
       .then(raw => {
-        if (opt.end) return done(res, raw)
+        if (opt.end) return config.done(res, raw)
         if (opt.pass) return next(null, raw)
         res.locals[opt.key] = raw
         next(opt.next)

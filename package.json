@@ -21,6 +21,7 @@
     "lodash.defaults": "^4.2.0",
     "lodash.get": "^4.4.2",
     "lodash.mapvalues": "^4.6.0",
+    "lodash.partial": "^4.2.1",
     "lodash.reduce": "^4.6.0"
   },
   "devDependencies": {

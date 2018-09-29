@@ -1,11 +1,11 @@
 'use strict'
 
 const _defaults = require('lodash.defaults')
-const { __CONFIG__: { done, end, key } } = require('..')
+const { config } = require('../config')
 
 module.exports = (model, docsSelector, opt = {}) => {
 
-  _defaults(opt, { end, key })
+  _defaults(opt, { end: config.end, key: config.key })
   let isFuncOptions = typeof opt.options === 'function'
 
   let midware = (req, res, next) => {
@@ -25,7 +25,7 @@ module.exports = (model, docsSelector, opt = {}) => {
           documents
       })
       .then(documents => {
-        if (opt.end) return done(res, documents)
+        if (opt.end) return config.done(res, documents)
         // If `opt.pass` is true, the `next` is a callback 
         // like `callback(err, payload)` and not Express next
         if (opt.pass) return next(null, documents)

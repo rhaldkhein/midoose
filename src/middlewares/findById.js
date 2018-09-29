@@ -1,7 +1,7 @@
 'use strict'
 
 const _defaults = require('lodash.defaults')
-const { __CONFIG__: { done, end, key } } = require('..')
+const { config } = require('../config')
 
 /**
  * Creates a findById middleware. 
@@ -43,7 +43,7 @@ const { __CONFIG__: { done, end, key } } = require('..')
  */
 module.exports = (model, idSelector, opt = {}) => {
 
-  _defaults(opt, { end, key })
+  _defaults(opt, { end: config.end, key: config.key })
   let isFuncOptions = typeof opt.options === 'function'
 
   let midware = (req, res, next) => {
@@ -60,7 +60,7 @@ module.exports = (model, idSelector, opt = {}) => {
         return doc
       })
       .then(doc => {
-        if (opt.end) return done(res, doc)
+        if (opt.end) return config.done(res, doc)
         if (opt.pass) return next(null, doc)
         res.locals[opt.key] = doc
         next(opt.next)

@@ -4,7 +4,8 @@ const parallel = require('async.parallel')
 const _defaults = require('lodash.defaults')
 const _reduce = require('lodash.reduce')
 const _mapValues = require('lodash.mapvalues')
-const { enums, __CONFIG__: { done, end, key } } = require('.')
+const enums = require('./enums')
+const { config: { done, end, key } } = require('./config')
 
 /**
  * Combine multiple middlewares for async query operations

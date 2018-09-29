@@ -10,6 +10,12 @@ const queryparser = require('express-query-int')
 const app = express()
 const port = 3000
 
+const midoose = require('../../src')
+mongoose.plugin(midoose)
+midoose.config({
+  done: (res, payload) => res.json({ success: true, payload })
+})
+
 require('../models')
 
 app.use(bodyparser.json())

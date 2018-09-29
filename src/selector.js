@@ -1,6 +1,6 @@
 'use strict'
 
-const { enums } = require('.')
+const enums = require('./enums')
 const _get = require('lodash.get')
 
 function translateObject(src, from) {

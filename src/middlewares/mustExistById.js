@@ -1,13 +1,13 @@
 'use strict'
 
 const _defaults = require('lodash.defaults')
-const { __CONFIG__: { end, key } } = require('..')
+const { config } = require('../config')
 
 module.exports = (model, id, opt = {}) => {
 
   _defaults(opt, {
-    end: end,
-    key: key,
+    end: config.end,
+    key: config.key,
     document: false
   })
   let isFuncOptions = typeof opt.options === 'function'
