@@ -11,6 +11,7 @@
 // const { body, query, raw } = require('../../src/selector')
 
 const {
+  end,
   update,
   updateById,
   updateOne,
@@ -19,7 +20,9 @@ const {
   find,
   body,
   query,
-  raw
+  locals,
+  raw,
+  combine
 } = require('../../src')
 
 module.exports = app => {
@@ -27,8 +30,21 @@ module.exports = app => {
   app.get('/', (req, res) => res.json({ message: 'Hello World!' }))
 
   app.post('/user',
+
     mustNotExist(Model.User, body(['email'])),
-    create(Model.User, body(['email', 'password']))
+
+    create(Model.User, body(['email', 'password']), {
+      end: false,
+      key: 'user'
+    }),
+
+    create(Model.Post, combine(
+      body(['title', 'published']),
+      locals({ user: 'user._id' })
+    ), { end: false }),
+
+    // End and series and send the user, instead of post
+    end(locals('user'))
   )
 
   app.post('/promise/user',
@@ -40,6 +56,13 @@ module.exports = app => {
             email: req.body.email,
             password: req.body.password
           })
+        })
+        .then(doc => {
+          return Model.Post.create({
+            user: doc.id,
+            title: req.body.title,
+            published: req.body.published
+          }).return(doc)
         })
         .then(doc => res.json(doc))
         .catch(next)

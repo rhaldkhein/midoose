@@ -3,20 +3,20 @@
 const _defaults = require('lodash.defaults')
 const { config } = require('../config')
 
-module.exports = (model, cond, fields, opt = {}) => {
+module.exports = (model, condSelector, fieldSelector, opt = {}) => {
 
   _defaults(opt, { end: config.end, key: config.key })
   let isFuncOptions = typeof opt.options === 'function'
 
   let midware = (req, res, next) => {
     // Get data be placed
-    let opt = midware._opt, docNew = fields(req, res)
+    let opt = midware._opt, docNew = fieldSelector(req, res)
     // Add more data to docs through options object
     if (opt.moreDoc) docNew = opt.moreDoc(docNew, req, res)
     // Trigger create
     model.updateMany(
       // Criteria to find docs
-      cond(req, res),
+      condSelector(req, res),
       docNew,
       isFuncOptions ? opt.options(req, res) : opt.options)
       .then(raw => {

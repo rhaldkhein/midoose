@@ -3,6 +3,7 @@
 module.exports = {
   create: require('./create'),
   deleteById: require('./deleteById'),
+  end: require('./end'),
   find: require('./find'),
   findById: require('./findById'),
   findOne: require('./findOne'),
