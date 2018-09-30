@@ -45,6 +45,7 @@ module.exports = (model, idSelector, opt = {}) => {
       idSelector(req, res),
       isFuncOptions ? opt.options(req, res) : opt.options)
       .then(doc => {
+        if (!opt.document) doc = true
         if (opt.end) return config.done(res, doc)
         if (opt.pass) return next(null, doc)
         res.locals[opt.key] = doc

@@ -2,6 +2,7 @@
 
 module.exports = {
   create: require('./create'),
+  deleteAll: require('./deleteAll'),
   deleteById: require('./deleteById'),
   end: require('./end'),
   find: require('./find'),

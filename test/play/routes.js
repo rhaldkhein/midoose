@@ -2,20 +2,16 @@
 
 /* eslint no-unused-vars: "off" */
 
-// const update = require('../../src/middlewares/update')
-// const updateById = require('../../src/middlewares/updateById')
-// const updateOne = require('../../src/middlewares/updateOne')
-// const create = require('../../src/middlewares/create')
-// const mustNotExist = require('../../src/middlewares/mustNotExist')
-// const find = require('../../src/middlewares/find')
-// const { body, query, raw } = require('../../src/selector')
-
 const {
   end,
+  deleteAll,
+  deleteById,
   update,
   updateById,
   updateOne,
   create,
+  mustExist,
+  mustExistById,
   mustNotExist,
   find,
   body,
@@ -25,25 +21,36 @@ const {
   combine
 } = require('../../src')
 
+
+
 module.exports = app => {
 
   app.get('/', (req, res) => res.json({ message: 'Hello World!' }))
 
-  app.post('/user',
+  app.delete('/post',
+    mustExistById(Model.Post, raw('5ba2402fd506d14586b871d6')),
+    deleteById(Model.Post, raw('5ba2402fd506d14586b871d6'))
+  )
 
+  app.post('/user',
     mustNotExist(Model.User, body(['email'])),
 
-    create(Model.User, body(['email', 'password']), {
-      end: false,
-      key: 'user'
-    }),
+    create(Model.User,
+      body(['email', 'password']),
+      { end: false, key: 'user' }
+    ),
 
-    create(Model.Post, combine(
-      body(['title', 'published']),
-      locals({ user: 'user._id' })
-    ), { end: false }),
+    create(Model.Post,
+      combine(
+        body(['title', 'published']),
+        locals({ user: 'user._id' })
+      ),
+      { end: false }
+    ),
 
-    // End and series and send the user, instead of post
+    // Todo: Add catch or error middleware for rollbacks
+
+    // End the series and send the user, instead of post
     end(locals('user'))
   )
 
@@ -74,11 +81,16 @@ module.exports = app => {
       try {
         let exists = await Model.User.where({ email: req.body.email }).exists()
         if (exists) throw new Error('already exist')
-        let doc = await Model.User.create({
+        let user = await Model.User.create({
           email: req.body.email,
           password: req.body.password
         })
-        res.json(doc)
+        await Model.Post.create({
+          user: user.id,
+          title: req.body.title,
+          published: req.body.published
+        })
+        res.json(user)
       } catch (error) {
         next(error)
       }
@@ -125,7 +137,7 @@ module.exports = app => {
   )
 
   app.use(function (err, req, res, next) {
-    // console.error(err.message)
+    console.error(err.message)
     res.status(500).json(err)
   })
 
