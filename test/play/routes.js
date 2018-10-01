@@ -1,6 +1,10 @@
 'use strict'
 
-/* eslint no-unused-vars: "off" */
+/* 
+  eslint 
+  no-unused-vars: "off",
+  no-console: "off" 
+*/
 
 const {
   end,
@@ -18,7 +22,8 @@ const {
   query,
   locals,
   raw,
-  combine
+  combine,
+  catchError
 } = require('../../src')
 
 
@@ -34,12 +39,10 @@ module.exports = app => {
 
   app.post('/user',
     mustNotExist(Model.User, body(['email'])),
-
     create(Model.User,
       body(['email', 'password']),
       { end: false, key: 'user' }
     ),
-
     create(Model.Post,
       combine(
         body(['title', 'published']),
@@ -47,10 +50,7 @@ module.exports = app => {
       ),
       { end: false }
     ),
-
-    // Todo: Add catch or error middleware for rollbacks
-
-    // End the series and send the user, instead of post
+    catchError(deleteAll(Model.User, body(['email']))),
     end(locals('user'))
   )
 
@@ -72,7 +72,10 @@ module.exports = app => {
           }).return(doc)
         })
         .then(doc => res.json(doc))
-        .catch(next)
+        .catch(err => {
+          Model.User.deleteOne({ email: req.body.email })
+          next(err)
+        })
     }
   )
 
@@ -92,6 +95,7 @@ module.exports = app => {
         })
         res.json(user)
       } catch (error) {
+        Model.User.deleteOne({ email: req.body.email })
         next(error)
       }
     }
