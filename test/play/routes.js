@@ -23,7 +23,8 @@ const {
   locals,
   raw,
   combine,
-  catchError
+  catchFor,
+  catchNotFor
 } = require('../../src')
 
 
@@ -50,7 +51,9 @@ module.exports = app => {
       ),
       { end: false }
     ),
-    catchError(deleteAll(Model.User, body(['email']))),
+    catchNotFor('MidooseError', 'ERR_DOC_MUST_NOT_EXIST',
+      deleteAll(Model.User, body(['email']))
+    ),
     end(locals('user'))
   )
 

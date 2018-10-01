@@ -2,6 +2,7 @@
 
 const _defaults = require('lodash.defaults')
 const { config } = require('../config')
+const Error = require('../error')
 
 module.exports = (model, condSelector, opt = {}) => {
 
@@ -19,7 +20,7 @@ module.exports = (model, condSelector, opt = {}) => {
       !opt.document && '+_id',
       isFuncOptions ? opt.options(req, res) : opt.options)
       .then(doc => {
-        if (doc && opt.end) throw new Error('document must not exist')
+        if (doc && opt.end) throw new Error('document must not exist', Error.ERR_DOC_MUST_NOT_EXIST)
         let val = opt.document ? doc : !doc
         if (opt.pass) return next(null, val)
         res.locals[opt.key] = val

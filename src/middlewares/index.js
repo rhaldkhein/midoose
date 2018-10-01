@@ -1,6 +1,8 @@
 'use strict'
 
 module.exports = {
+  catchAll: require('./catchAll'),
+  catchFor: require('./catchFor'),
   create: require('./create'),
   deleteAll: require('./deleteAll'),
   deleteById: require('./deleteById'),

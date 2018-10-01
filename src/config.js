@@ -1,5 +1,7 @@
 'use strict'
 
+const LocalError = require('./error')
+
 /**
  * Configuration
  */
@@ -7,7 +9,8 @@
 const defaultConfig = {
   done: (res, payload) => { res.json(payload) },
   end: true,
-  key: 'result'
+  key: 'result',
+  error: LocalError
 }
 
 let config = {}

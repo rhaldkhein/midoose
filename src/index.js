@@ -5,7 +5,6 @@ const _mapValues = require('lodash.mapvalues')
 const config = require('./config')
 const selectors = require('./selector')
 const combine = require('./combine')
-const catchError = require('./catchError')
 const middlewares = require('./middlewares')
 
 /**
@@ -37,6 +36,5 @@ module.exports = Object.assign(plugin, {
   ...middlewares,
   ...selectors,
   combine,
-  catchError,
   config: config.set
 })

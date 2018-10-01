@@ -2,6 +2,7 @@
 
 const _defaults = require('lodash.defaults')
 const { config } = require('../config')
+const Error = require('../error')
 
 module.exports = (model, condSelector, opt = {}) => {
 
@@ -15,7 +16,7 @@ module.exports = (model, condSelector, opt = {}) => {
       opt.select,
       isFuncOptions ? opt.options(req, res) : opt.options)
       .then(doc => {
-        if (!doc && opt.end) throw new Error('document not found')
+        if (!doc && opt.end) throw new Error('document not found', Error.ERR_DOC_NOT_FOUND)
         if (doc && opt.populate) {
           return model.populate(doc, opt.populate)
         }
