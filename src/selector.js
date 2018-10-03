@@ -1,6 +1,5 @@
 'use strict'
 
-const enums = require('./enums')
 const _get = require('lodash.get')
 
 function translateObject(src, from) {
@@ -58,24 +57,24 @@ function getSelectorBase(any, isRes) {
     return (req, res) => translateValue((isRes ? res : req), any)
 }
 
-function setKind(mw) {
-  mw._kind = enums.SELECTOR
+function setFlag(mw) {
+  mw.selector = true
   return mw
 }
 
-exports.body = any => setKind(getSelector(any, 'body'))
+exports.body = any => setFlag(getSelector(any, 'body'))
 
-exports.query = any => setKind(getSelector(any, 'query'))
+exports.query = any => setFlag(getSelector(any, 'query'))
 
-exports.params = any => setKind(getSelector(any, 'params'))
+exports.params = any => setFlag(getSelector(any, 'params'))
 
-exports.locals = any => setKind(getSelector(any, 'locals', true))
+exports.locals = any => setFlag(getSelector(any, 'locals', true))
 
-exports.raw = any => setKind(() => any)
+exports.raw = any => setFlag(() => any)
 
-exports.req = any => setKind(getSelectorBase(any))
+exports.req = any => setFlag(getSelectorBase(any))
 
-exports.res = any => setKind(getSelectorBase(any, true))
+exports.res = any => setFlag(getSelectorBase(any, true))
 
 exports.derive = (path, key, fn) => {
   if (typeof key === 'function') {

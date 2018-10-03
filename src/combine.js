@@ -4,7 +4,6 @@ const parallel = require('async.parallel')
 const _defaults = require('lodash.defaults')
 const _reduce = require('lodash.reduce')
 const _mapValues = require('lodash.mapvalues')
-const enums = require('./enums')
 const { config: { done, end, key } } = require('./config')
 
 /**
@@ -53,7 +52,7 @@ function combineSelectors(sels) {
 }
 
 module.exports = (...rest) => {
-  if (rest[0]._kind === enums.SELECTOR) {
+  if (rest[0].selector) {
     return combineSelectors(rest)
   } else {
     if (typeof rest[rest.length - 1] !== 'function') {
