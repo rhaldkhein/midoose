@@ -10,6 +10,7 @@ const {
   end,
   deleteAll,
   deleteById,
+  catchWith,
   update,
   updateById,
   updateOne,
@@ -26,8 +27,6 @@ const {
   catchFor,
   catchNotFor
 } = require('../../src')
-
-
 
 module.exports = app => {
 
@@ -51,7 +50,8 @@ module.exports = app => {
       ),
       { end: false }
     ),
-    catchNotFor('MidooseError', 'ERR_DOC_MUST_NOT_EXIST',
+    catchNotFor({ code: 'ERR_DOC_MUST_NOT_EXIST' },
+      // Roll back
       deleteAll(Model.User, body(['email']))
     ),
     end(locals('user'))
@@ -76,7 +76,9 @@ module.exports = app => {
         })
         .then(doc => res.json(doc))
         .catch(err => {
-          Model.User.deleteOne({ email: req.body.email })
+          // Roll back
+          if (err.message !== 'already exist')
+            Model.User.deleteOne({ email: req.body.email })
           next(err)
         })
     }

@@ -8,10 +8,8 @@ class LocalError extends Error {
   }
 }
 
-LocalError.codes = {
-  ERR_DOC_MUST_NOT_EXIST: 'ERR_DOC_MUST_NOT_EXIST',
-  ERR_DOC_MUST_EXIST: 'ERR_DOC_MUST_EXIST',
-  ERR_DOC_NOT_FOUND: 'ERR_DOC_NOT_FOUND'
-}
+LocalError.ERR_DOC_MUST_NOT_EXIST = 'ERR_DOC_MUST_NOT_EXIST'
+LocalError.ERR_DOC_MUST_EXIST = 'ERR_DOC_MUST_EXIST'
+LocalError.ERR_DOC_NOT_FOUND = 'ERR_DOC_NOT_FOUND'
 
 module.exports = LocalError

@@ -3,6 +3,8 @@
 module.exports = {
   catchAll: require('./catchAll'),
   catchFor: require('./catchFor'),
+  catchNotFor: require('./catchNotFor'),
+  catchWith: require('./catchWith'),
   create: require('./create'),
   deleteAll: require('./deleteAll'),
   deleteById: require('./deleteById'),

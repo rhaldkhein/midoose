@@ -35,8 +35,7 @@ describe('deleteById', () => {
 
     const res = mockRes(payload => {
       try {
-        expect(payload).to.be.property('_id')
-        expect(payload._id).to.be.equal('123')
+        expect(payload).to.be.true
         done()
       } catch (error) {
         done(error)
@@ -54,8 +53,7 @@ describe('deleteById', () => {
 
     const res = mockRes(payload => {
       try {
-        expect(payload).to.be.property('_id')
-        expect(payload._id).to.be.equal('456')
+        expect(payload).to.be.true
         done()
       } catch (error) {
         done(error)
@@ -73,8 +71,7 @@ describe('deleteById', () => {
 
     const res = mockRes(payload => {
       try {
-        expect(payload).to.be.property('_id')
-        expect(payload._id).to.be.equal('456')
+        expect(payload).to.be.true
         done()
       } catch (error) {
         done(error)
@@ -98,7 +95,7 @@ describe('deleteById', () => {
       try {
         expect(resJsonEnd).to.have.not.been.called
         expect(res.locals).to.be.property('result')
-        expect(res.locals.result._id).to.be.equal('123')
+          .and.to.be.true
         done()
       } catch (error) {
         done(error)
@@ -123,7 +120,7 @@ describe('deleteById', () => {
       try {
         expect(resJsonEnd).to.have.not.been.called
         expect(res.locals).to.be.property('customResult')
-        expect(res.locals.customResult._id).to.be.equal('456')
+          .and.to.be.true
         done()
       } catch (error) {
         done(error)
