@@ -7,7 +7,7 @@ const _mapValues = require('lodash.mapvalues')
 const { config: { done, end, key } } = require('./config')
 
 /**
- * Combine multiple middlewares for async query operations
+ * Combine multiple middlewares for async operations
  */
 
 function combineMiddlewares(mids, opt = {}) {
