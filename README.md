@@ -25,30 +25,29 @@ const User = require('./models/user')
 // Select some middlewares and selectors to use
 const {  create, mustNotExist, body } = require('midoose')
 
-// Compose your API route
+// Compose your API route. 
+// A very basic composition of middlewares
 app.post('/api/user',
-	// Make sure user with value of email does not exist in database
-    // If exists, it will throw error and skips to error handler middleware
 	mustNotExist(User, body(['email'])), 
-    // Create the user. Getting the values from body
-    create(User, body(['email', 'password'])) 
+  create(User, body(['email', 'password'])) 
 )
 
 // More routes
 ...
 ```
 
-## Selectors
+# Selectors
 
-...
+Selectors are functions that resolves an argument (string, array, object) to values from `req` and `res`. And are designed for use in Middlewares.
 
-#### body(any)
+### body(any)
 
-Select and gets data from `req.body`
+Select and gets data from `req.body`.
 
 ```javascript
-// Sample req body data from express
-req.body = { name: 'Foo', pass: 'Bar', age: 80 }
+const { body } = require('midoose')
+// Sample req.body data from Express: { name: 'Foo', pass: 'Bar', age: 80 }
+
 // Resolves to string
 body('name') // => 'Foo'
 // Resolves to object
@@ -57,28 +56,52 @@ body(['name', 'age']) // => { email: 'Foo', age: 80 }
 body({ custom: 'name' }) // => { custom: 'Foo' }
 ```
 
-#### query(any)
-Select ang gets data from `req.query`
+### query(any)
+Select ang gets data from `req.query`.
 
-#### params(any)
-Select ang gets data from `req.params`
+### params(any)
+Select ang gets data from `req.params`.
 
-#### locals(any)
-Select ang gets data from `req.locals`
+### locals(any)
+Select ang gets data from `res.locals`.
+
+### req(any)
+Select ang gets data from `req` directly.
+```javascript
+const { req } = require('midoose')
+
+// Resolves to string
+body('body.name') // => 'Foo'
+// Resolves to object with custom keys
+req({ custom: 'body.name' }) // => { custom: 'Foo' }
+```
+
+### res(any)
+Select ang gets data from `res` directly.
+
+### raw(any)
+Directly return any. Instead of resolving from req or res.
 
 
 
-## Methods
+# Middleware Creators
 
-Midoose
+...
 
-#### create(model, selector [, options])
+### create(model, selector [, options])
 
-Creates a middleware that saves one or more documents to the database
+Creates a middleware that saves one or more documents to the database. Associated options are `end`, `key`, `moreDocs`, `populate`, `next`. See options section for details.
 
 ```javascript
-// Saves single document. Gets values
-create(User, body(['email', 'password']))
+// Saves single document. Get values form `req.body`
+app.post('/user', create(User, body(['email', 'password'])))
+```
 
+### deleteAll(model, selector [, options])
 
+...
+
+```javascript
+// Delete all inactive users
+app.delete('/user/clean', deleteAll(User, raw({active: false})))
 ```
