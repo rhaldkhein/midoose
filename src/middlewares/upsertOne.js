@@ -3,7 +3,7 @@
 const _defaults = require('lodash.defaults')
 const updateOne = require('./updateOne')
 
-module.exports = (model, condSelector, docSelector, opt = {}) => {
+module.exports = (model, condSelector, valueSelector, opt = {}) => {
 
   _defaults(opt, {
     options: { upsert: true }
@@ -12,7 +12,7 @@ module.exports = (model, condSelector, docSelector, opt = {}) => {
   return updateOne(
     model,
     condSelector,
-    docSelector,
+    valueSelector,
     opt
   )
 

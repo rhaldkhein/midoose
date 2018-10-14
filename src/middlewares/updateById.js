@@ -2,12 +2,12 @@
 
 const updateOne = require('./updateOne')
 
-module.exports = (model, id, fields, opt = {}) => {
+module.exports = (model, idSelector, valueSelector, opt = {}) => {
 
   return updateOne(
     model,
-    (req, res) => ({ _id: id(req, res) }),
-    fields,
+    (req, res) => ({ _id: idSelector(req, res) }),
+    valueSelector,
     opt
   )
 

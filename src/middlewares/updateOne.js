@@ -3,7 +3,7 @@
 const _defaults = require('lodash.defaults')
 const { config } = require('../config')
 
-module.exports = (model, condSelector, docSelector, opt = {}) => {
+module.exports = (model, condSelector, valueSelector, opt = {}) => {
 
   _defaults(opt, { end: config.end, key: config.key })
 
@@ -13,7 +13,7 @@ module.exports = (model, condSelector, docSelector, opt = {}) => {
 
   let midware = (req, res, next) => {
     // Get data be placed
-    let opt = midware._opt, docNew = docSelector(req, res)
+    let opt = midware._opt, docNew = valueSelector(req, res)
     // Add more data to docs through options object
     if (opt.moreDoc) docNew = opt.moreDoc(docNew, req, res)
     // Trigger update

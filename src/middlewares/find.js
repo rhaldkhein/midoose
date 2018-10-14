@@ -2,6 +2,7 @@
 
 const _defaults = require('lodash.defaults')
 const { config } = require('../config')
+const { raw } = require('../selector')
 
 /**
  * Creates a findAll middleware. 
@@ -42,7 +43,7 @@ const { config } = require('../config')
  *  options {Object}  - Mongoose `options` argument for `find`
  * 
  */
-module.exports = (model, condSelector, opt = {}) => {
+module.exports = (model, condSelector = raw({}), opt = {}) => {
 
   _defaults(opt, { end: config.end, key: config.key })
   let isFuncOptions = typeof opt.options === 'function'
