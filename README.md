@@ -1,6 +1,15 @@
 # Midoose
 Composable utility middlewares for Mongoose + Express API  
 
+Objectives:
+
+- Readable and clean code
+- Faster API creation
+- Composable middlewares
+- Auto error handling
+- Parallel middleware execution
+- ... maybe more
+
 #### Prerequisites
 
 - [Express](http://expressjs.com/) (4.x)
@@ -39,7 +48,7 @@ app.post('/api/user',
 
 # Selectors
 
-Selectors are functions that resolves an argument (string, array, object) to values from `req` and `res`. And are designed for use in Middlewares.
+Selectors are functions that resolves an argument (string, array, object) to values from `req` and `res`. Designed for use in Middleware Creators.
 
 ### body(any)
 
@@ -82,6 +91,16 @@ Select ang gets data from `res` directly.
 
 ### raw(any)
 Directly return any. Instead of resolving from req or res.
+
+### derive(path [, key], fn)
+Derive the value before resolving. For use in selectors.
+```javascript
+body([
+  derive('name', val => `Hello ${val}`),
+  derive('age', 'message', val => `Your age is ${val}`)
+])
+// Resolves to { name: 'Hello Foo', message: 'Your age is 90' }
+```
 
 
 
@@ -208,7 +227,11 @@ Same with `catchFor` except it accepts a function as condition and pass the erro
 
 # Combine
 
-Combines multiple middleware creators for executing operations in parallel.
+Combines multiple middleware creators for executing operations in parallel or multiple selectors to resolved in single object. Options are `key` and `next`.
+
+### combine(...middlewareCreators [, options])
+
+Execute middlewares in parallel and attach the results to `res.locals.result`.
 
 ```javascript
   app.get('/alldata',
@@ -217,20 +240,39 @@ Combines multiple middleware creators for executing operations in parallel.
       find(User), // Find all users
       find(Post), // Find all posts
       ...
-    )
-    ...
+    ),
+    end(locals('result')) // End and route and send the results
   )
 ```
 
-Also combines selectors.
+### combine(...selectors)
+
+Combine selectors to resolve in single object.
 
 ```javascript
   app.get('/alldata',
     create(User, 
       combine(
         query(['name', 'age']),
-        bodu(['email', 'password'])
+        body(['email', 'password'])
       )
+      // Resolve to { name: 'Foo', age: 20, email: 'test@email.com', password: 'abc123' }
     )
   )
 ```
+
+
+# Options
+
+Following options are available for middleware creators.
+
+| Name | Description | Default | E.g. |
+| - | - | - | - |
+| end | Directly send out the results of a middleware | true |
+| key | Name of the result property attach to `res.locals` | "result" | res.locals.result |
+| next | A value to pass to [Express next function](https://expressjs.com/en/guide/using-middleware.html#middleware.router) | null | 'route' |
+| options | [Mongoose query options](https://mongoosejs.com/docs/api.html#query_Query-setOptions) used by middleware creators | null | { limit:5 } |
+| document | Return the document instead of default result | false |
+| select | [Mongoose projection](https://mongoosejs.com/docs/api.html#model_Model.find) or fields selection | null | 'name -password' |
+| populate | [Mongoose populate feature](https://mongoosejs.com/docs/api.html#model_Model.populate) | null | 'posts' |
+| map | A function that transforms result array before attaching | null |
