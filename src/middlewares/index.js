@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
+  aggregate: require('./aggregate'),
   catchAll: require('./catchAll'),
   catchFor: require('./catchFor'),
   catchNotFor: require('./catchNotFor'),
@@ -19,5 +20,6 @@ module.exports = {
   updateById: require('./updateById'),
   updateOne: require('./updateOne'),
   upsert: require('./upsert'),
-  upsertOne: require('./upsertOne')
+  upsertOne: require('./upsertOne'),
+  wrap: require('./wrap')
 }

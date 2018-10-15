@@ -8,7 +8,6 @@ Objectives:
 - Composable middlewares
 - Auto error handling
 - Parallel middleware execution
-- ... maybe more
 
 #### Prerequisites
 
@@ -102,7 +101,14 @@ body([
 // Resolves to { name: 'Hello Foo', message: 'Your age is 90' }
 ```
 
-
+#### Custom Selection?
+Selectors are just normal functions that takes `req` and `res`.
+```javascript
+// With selector
+app.get('/user',  find(Users, query(['active']))
+// Without selector
+app.get('/user',  find(Users, (req, res) => { active: req.query.active }))
+```
 
 # Middleware Creators
 
@@ -174,20 +180,42 @@ app.put('/users/:age', update(User, params(['age']), body(['active'])))
 ```
 
 ### updateById(model, idSelector, valueSelector [, options])
-
 Same with `update` except it requires id selector (string) and only affects one document.
 
 ### updateOne(model, conditionSelector, valueSelector [, options])
-
 Same with `update` except it only affects the first found document.
 
 ### upsert(model, conditionSelector, valueSelector [, options])
-
 Same with `update` except it creates the documents if it doesn't exist.
 
 ### upsertOne(model, conditionSelector, valueSelector [, options])
-
 Same with `upsert` except it only creates one document.
+
+### aggregate(model, pipeline, [, options])
+Use MongoDB/Mongoose aggregation. `pipeline` can be `array` or `function` that returns the aggregation array. Options: `end` and `key`.
+```javascript
+app.get('/balance',
+  aggregate(User,
+    (req, res) => [
+      { $group: { _id: null, maxBalance: { $max: '$balance' } } },
+      { $project: { _id: 0, maxBalance: 1 } }
+    ]
+  )
+)
+```
+
+### wrap(middleware [, options])
+If you need complex operation which you can't use pre-defined middleware creators. Just make sure to return a `promise`. Options are `end` and `key`.
+```javascript
+app.get('/users',
+  wrap(
+    (req, res) => {
+      // Your very complex operation
+      return User.find({})
+    }
+  )
+)
+```
 
 
 

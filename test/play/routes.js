@@ -25,12 +25,38 @@ const {
   raw,
   combine,
   catchFor,
-  catchNotFor
+  catchNotFor,
+  aggregate,
+  wrap
 } = require('../../src')
 
 module.exports = app => {
 
   app.get('/', (req, res) => res.json({ message: 'Hello World!' }))
+
+  app.get('/aggregate', (req, res) => {
+    res.json({ a: 1 })
+  })
+
+  app.get('/aggregate2',
+    aggregate(
+      Model.User,
+      (req, res) => [
+        { $group: { _id: null, maxBalance: { $max: '$balance' } } },
+        { $project: { _id: 0, maxBalance: 1 } }
+      ]
+    )
+  )
+
+  app.get('/aggregate3',
+    wrap(
+      (req, res) => {
+        return Model.User.aggregate()
+          .group({ _id: null, maxBalance: { $max: '$balance' } })
+          .project('-id maxBalance')
+      }
+    )
+  )
 
   app.delete('/post',
     mustExistById(Model.Post, raw('5ba2402fd506d14586b871d6')),
