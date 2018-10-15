@@ -1,7 +1,7 @@
 # Midoose
 Composable utility middlewares for Mongoose + Express API  
 
-Objectives:
+#### Objectives
 
 - Readable and clean code
 - Faster API creation
@@ -17,6 +17,14 @@ Objectives:
 #### Installation
 
 `npm install midoose`
+
+#### Table of Contents
+
+- [Selectors](#selectors)
+- [Middleware Creators](#middleware-creators)
+- [Error Handlers](#error-handlers)
+- [Combine](#combine)
+- [Options](#options)
 
 ### Basic Usage
 
