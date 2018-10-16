@@ -1,7 +1,7 @@
 {
   "name": "midoose",
-  "version": "0.0.0",
-  "description": "Collection of high-level Mongoose utility middlewares for Express",
+  "version": "0.1.0",
+  "description": "Composable utility middlewares for Mongoose + Express API",
   "main": "index.js",
   "scripts": {
     "test": "nyc mocha",
@@ -17,6 +17,16 @@
     "url": "https://github.com/rhaldkhein/midoose/issues"
   },
   "homepage": "https://github.com/rhaldkhein/midoose#readme",
+  "keywords": [
+    "mongoose",
+    "express",
+    "middleware",
+    "utilities",
+    "composable",
+    "model",
+    "query",
+    "operation"
+  ],
   "dependencies": {
     "async.parallel": "^0.5.2",
     "lodash.defaults": "^4.2.0",
@@ -43,5 +53,9 @@
     "shortid": "^2.2.13",
     "sinon": "^6.2.0",
     "sinon-chai": "^3.2.0"
-  }
+  },
+  "files": [
+    "src/*",
+    "index.js"
+  ]
 }

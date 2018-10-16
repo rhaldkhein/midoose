@@ -170,7 +170,7 @@ Finds a document that matches the selector. Options are same with `find`.
 
 ### mustExist(model, selector [, options])
 
-Make sure a document exists that matches the selector. Otherwise, throws an error `ERR_DOC_MUST_EXIST`. Options: `end`, `key`, `next`, `options`, `document`.
+Make sure a document exists that matches the selector. Otherwise, throws an error `ERR_DOC_MUST_EXIST`. Options: `end`, `key`, `next`, `options`, `document`.  
 
 ### mustExistById(model, selector [, options])
 
@@ -241,16 +241,16 @@ Catches all errors and apply all given middlewares.
 
 Catches all errors that matches the condition and apply all given middlewares.
 ```javascript
-  app.post('/user',
-    mustNotExist(User, body(['email'])),
-    catchFor({ code: 'ERR_DOC_MUST_NOT_EXIST' },
-      update(User, body(['email']), raw({sample: 'data'})),
-      // ... more middlewares to apply on this error
-    ),
-    ...
-    // Middlewares in this line will not be applied.
-    // Instead it passes the error to the next handler.
-  )
+app.post('/user',
+  mustNotExist(User, body(['email'])),
+  catchFor({ code: 'ERR_DOC_MUST_NOT_EXIST' },
+    update(User, body(['email']), raw({sample: 'data'})),
+    // ... more middlewares to apply on this error
+  ),
+  ...
+  // Middlewares in this line will not be applied.
+  // Instead it passes the error to the next handler.
+)
 ```
 
 ### catchNotFor(condition, ...middlewareCreators)
@@ -272,15 +272,15 @@ Combines multiple middleware creators for executing operations in parallel or mu
 Execute middlewares in parallel and attach the results to `res.locals.result`.
 
 ```javascript
-  app.get('/alldata',
-    // Executes finds in parallel.
-    combine(
-      find(User), // Find all users
-      find(Post), // Find all posts
-      ...
-    ),
-    end(locals('result')) // End and route and send the results
-  )
+app.get('/alldata',
+  // Executes finds in parallel.
+  combine(
+    find(User), // Find all users
+    find(Post), // Find all posts
+    ...
+  ),
+  end(locals('result')) // End and route and send the results
+)
 ```
 
 ### combine(...selectors)
@@ -288,15 +288,15 @@ Execute middlewares in parallel and attach the results to `res.locals.result`.
 Combine selectors to resolve in single object.
 
 ```javascript
-  app.get('/alldata',
-    create(User, 
-      combine(
-        query(['name', 'age']),
-        body(['email', 'password'])
-      )
-      // Resolve to { name: 'Foo', age: 20, email: 'test@email.com', password: 'abc123' }
+app.get('/alldata',
+  create(User, 
+    combine(
+      query(['name', 'age']),
+      body(['email', 'password'])
     )
+    // Resolve to { name: 'Foo', age: 20, email: 'test@email.com', password: 'abc123' }
   )
+)
 ```
 
 
@@ -314,3 +314,36 @@ Following options are available for middleware creators.
 | select | [Mongoose projection](https://mongoosejs.com/docs/api.html#model_Model.find) or fields selection | null | 'name -password' |
 | populate | [Mongoose populate feature](https://mongoosejs.com/docs/api.html#model_Model.populate) | null | 'posts' |
 | map | A function that transforms result array before attaching | null |
+
+
+
+# Configuration
+
+Customize default behaviour and options.
+
+```javascript
+const midoose = require('midoose')
+
+midoose.config({
+
+  // Change the default end option
+  end: true,
+
+  // Change the default result name/key
+  key: 'result',
+
+  // Override the default success handler for Middleware Creators.
+  // Use for wrapping results before sending to client.
+  done: (res, payload) => { res.json(payload) },
+
+  // Instead of above, you can do this.
+  done: (res, payload) => { 
+    res.json({
+      error: false,
+      meta: { foo: 'Bar' }
+      payload
+    })
+  }
+
+})
+```
