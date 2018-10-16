@@ -24,8 +24,7 @@
     "lodash.ismatch": "^4.4.0",
     "lodash.mapvalues": "^4.6.0",
     "lodash.partial": "^4.2.1",
-    "lodash.reduce": "^4.6.0",
-    "nyc": "^13.0.1"
+    "lodash.reduce": "^4.6.0"
   },
   "devDependencies": {
     "benchmark": "^2.1.4",
@@ -40,6 +39,7 @@
     "lodash": "^4.17.11",
     "mocha": "^5.2.0",
     "mongoose": "^5.2.14",
+    "nyc": "^13.1.0",
     "shortid": "^2.2.13",
     "sinon": "^6.2.0",
     "sinon-chai": "^3.2.0"
