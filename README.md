@@ -1,7 +1,7 @@
 # Midoose
 Composable utility middlewares for Mongoose + Express API  
 
-[![Build Status](https://travis-ci.org/rhaldkhein/midoose.svg?branch=master)](https://travis-ci.org/rhaldkhein/midoose) [![Coverage Status](https://coveralls.io/repos/github/rhaldkhein/midoose/badge.svg?branch=master)](https://coveralls.io/github/rhaldkhein/midoose?branch=master)
+[![Build Status](https://travis-ci.org/rhaldkhein/midoose.svg?branch=master)](https://travis-ci.org/rhaldkhein/midoose) [![codecov](https://codecov.io/gh/rhaldkhein/midoose/branch/master/graph/badge.svg)](https://codecov.io/gh/rhaldkhein/midoose)
 
 #### Objectives
 
