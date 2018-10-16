@@ -1,6 +1,8 @@
 # Midoose
 Composable utility middlewares for Mongoose + Express API  
 
+[![Build Status](https://travis-ci.org/rhaldkhein/midoose.svg?branch=master)](https://travis-ci.org/rhaldkhein/midoose)  
+
 #### Objectives
 
 - Readable and clean code
