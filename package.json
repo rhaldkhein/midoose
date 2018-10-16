@@ -4,7 +4,8 @@
   "description": "Collection of high-level Mongoose utility middlewares for Express",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha"
+    "test": "nyc mocha",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "body-parser": "^1.18.3",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
+    "coveralls": "^3.0.2",
     "eslint": "^5.5.0",
     "express": "^4.16.3",
     "express-query-int": "^3.0.0",
